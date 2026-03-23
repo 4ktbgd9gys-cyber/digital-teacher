@@ -1,1021 +1,1033 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>老师的数字分身</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧老师 - 你的AI学习伙伴</title>
+    <meta property="og:title" content="智慧老师 - 你的AI学习伙伴">
+    <meta property="og:description" content="有问题随时问我！">
+    <meta name="wxg:share_title" content="智慧老师 - 你的AI学习伙伴">
+    <meta name="wxg:share_desc" content="24小时在线的AI学习助手，有问题尽管问我！">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  :root {
-    --primary: #6B5CE7;
-    --primary-light: #8B7FF0;
-    --primary-dark: #4A3CC4;
-    --accent: #FF6B9D;
-    --bg-dark: #0A0E1A;
-    --text-light: #E8E8F0;
-    --text-muted: #8888AA;
-    --glass: rgba(255,255,255,0.08);
-    --glass-border: rgba(255,255,255,0.12);
-  }
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-  body {
-    font-family: 'Noto Sans SC', -apple-system, sans-serif;
-    background: var(--bg-dark);
-    color: var(--text-light);
-    height: 100vh; overflow: hidden;
-    display: flex; flex-direction: column;
-  }
+        /* 背景动画 */
+        .bg-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
 
-  /* 背景 */
-  .bg-anim {
-    position: fixed; inset: 0; z-index: 0;
-    background: radial-gradient(ellipse at 20% 50%, rgba(107,92,231,0.15) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(255,107,157,0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 60% 80%, rgba(0,200,255,0.08) 0%, transparent 50%),
-                linear-gradient(135deg, #0A0E1A 0%, #0D1230 50%, #0A0E1A 100%);
-  }
-  .bg-particles { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
-  .particle {
-    position: absolute; border-radius: 50%;
-    animation: float linear infinite; opacity: 0;
-  }
-  @keyframes float {
-    0% { transform: translateY(100vh) scale(0); opacity: 0; }
-    10% { opacity: 0.6; } 90% { opacity: 0.3; }
-    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-  }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
 
-  /* 顶部栏 */
-  .header {
-    position: relative; z-index: 10;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 24px;
-    background: rgba(10,14,26,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-  }
-  .header-title {
-    font-size: 17px; font-weight: 700;
-    background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
-  .header-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .header-actions { display: flex; gap: 8px; align-items: center; }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
 
-  .btn-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: var(--glass); border: 1px solid var(--glass-border);
-    color: var(--text-muted); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; transition: all 0.2s;
-  }
-  .btn-icon:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-  .btn-icon.active { background: rgba(107,92,231,0.3); color: var(--primary-light); border-color: var(--primary); }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -5s;
+        }
 
-  /* 主体 */
-  .main { position: relative; z-index: 5; flex: 1; display: flex; overflow: hidden; }
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
 
-  /* 左侧数字人面板 */
-  .avatar-panel {
-    width: 320px; flex-shrink: 0;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 24px 18px;
-    border-right: 1px solid var(--glass-border);
-    background: rgba(10,14,26,0.45);
-    overflow-y: auto;
-  }
-  .avatar-panel::-webkit-scrollbar { width: 3px; }
-  .avatar-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 30px) scale(1.02); }
+        }
 
-  /* 头像容器 */
-  .avatar-wrapper {
-    position: relative; width: 190px; height: 190px; margin-bottom: 16px;
-  }
-  .avatar-ring {
-    position: absolute; inset: -8px; border-radius: 50%;
-    border: 2px solid rgba(107,92,231,0.3);
-    animation: ring-pulse 2s ease-in-out infinite;
-    pointer-events: none;
-  }
-  .avatar-ring:nth-child(2) { inset: -16px; animation-delay: 0.5s; border-color: rgba(107,92,231,0.2); }
-  .avatar-ring:nth-child(3) { inset: -24px; animation-delay: 1s; border-color: rgba(107,92,231,0.1); }
-  @keyframes ring-pulse {
-    0%,100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.04); opacity: 0.5; }
-  }
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-  .avatar-container {
-    width: 190px; height: 190px; border-radius: 50%;
-    position: relative; overflow: hidden;
-    border: 3px solid transparent;
-    background: linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box,
-                linear-gradient(135deg, var(--primary), var(--accent)) border-box;
-    box-shadow: 0 0 40px rgba(107,92,231,0.5), 0 0 80px rgba(107,92,231,0.2);
-    transition: box-shadow 0.3s;
-  }
-  .avatar-container.speaking {
-    box-shadow: 0 0 60px rgba(107,92,231,0.8), 0 0 120px rgba(107,92,231,0.35);
-    animation: avatar-speak 0.6s ease-in-out infinite alternate;
-  }
-  @keyframes avatar-speak {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.03); }
-  }
+        /* 数字人区域 */
+        .digital-human {
+            position: relative;
+            width: 280px;
+            height: 380px;
+            margin: 20px 0 30px;
+        }
 
-  /* ===== 动态数字人头像 ===== */
-  .digi-face {
-    width: 100%; height: 100%;
-    position: relative;
-    background: linear-gradient(160deg, #1a1040 0%, #0d0820 100%);
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-  }
+        .avatar-container {
+            position: relative;
+            width: 200px;
+            height: 280px;
+            margin: 0 auto;
+        }
 
-  /* 背景扫描线 */
-  .digi-face::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(107,92,231,0.04) 3px, rgba(107,92,231,0.04) 4px);
-    animation: scan-move 8s linear infinite;
-    pointer-events: none;
-  }
-  @keyframes scan-move { from{background-position:0 0} to{background-position:0 100px} }
+        /* 数字人形象 - 美丽的AI少女 */
+        .avatar {
+            width: 200px;
+            height: 280px;
+            position: relative;
+            animation: breathe 3s ease-in-out infinite;
+        }
 
-  /* 扫描光线 */
-  .digi-scan {
-    position: absolute; top: -10%; left: 0; right: 0;
-    height: 6px;
-    background: linear-gradient(90deg, transparent, rgba(107,92,231,0.5), rgba(162,155,254,0.8), rgba(107,92,231,0.5), transparent);
-    animation: scan-line 3s ease-in-out infinite;
-    filter: blur(1px);
-    pointer-events: none;
-  }
-  @keyframes scan-line { 0%{top:-10%} 100%{top:110%} }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
 
-  /* 人脸轮廓 */
-  .digi-head {
-    position: relative;
-    width: 120px; height: 145px;
-    background: linear-gradient(160deg, #2a1f6e 0%, #1a1248 100%);
-    border-radius: 50% 50% 45% 45% / 55% 55% 45% 45%;
-    border: 1.5px solid rgba(107,92,231,0.6);
-    box-shadow: 0 0 20px rgba(107,92,231,0.4), inset 0 0 30px rgba(107,92,231,0.1);
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-  }
+        .avatar-body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 200px;
+            background: linear-gradient(180deg, #e8d5f2 0%, #d4a5e0 50%, #c488d4 100%);
+            border-radius: 70px 70px 50px 50px;
+            box-shadow: 0 20px 60px rgba(180, 120, 220, 0.4);
+        }
 
-  /* 头发 */
-  .digi-hair {
-    position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
-    width: 130px; height: 55px;
-    background: linear-gradient(180deg, #0d0820 60%, transparent);
-    border-radius: 50% 50% 0 0;
-    border-top: 2px solid rgba(162,155,254,0.5);
-    border-left: 2px solid rgba(107,92,231,0.3);
-    border-right: 2px solid rgba(107,92,231,0.3);
-  }
-  /* 两侧鬓角 */
-  .digi-hair::before, .digi-hair::after {
-    content: '';
-    position: absolute;
-    bottom: -30px;
-    width: 18px; height: 50px;
-    background: linear-gradient(180deg, #0d0820, transparent);
-    border-radius: 0 0 10px 10px;
-  }
-  .digi-hair::before { left: -2px; }
-  .digi-hair::after { right: -2px; }
+        .avatar-head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 140px;
+            background: linear-gradient(180deg, #fff5f5 0%, #ffe4ec 100%);
+            border-radius: 60px 60px 50px 50px;
+            box-shadow: 0 10px 40px rgba(255, 200, 220, 0.5);
+        }
 
-  /* 眼睛区域 */
-  .digi-eyes {
-    display: flex; gap: 26px;
-    margin-top: 10px;
-    position: relative;
-  }
-  .digi-eye {
-    width: 22px; height: 10px;
-    background: linear-gradient(90deg, rgba(107,92,231,0.3), rgba(162,155,254,0.9), rgba(107,92,231,0.3));
-    border-radius: 50%;
-    position: relative;
-    box-shadow: 0 0 8px rgba(162,155,254,0.8), 0 0 20px rgba(107,92,231,0.5);
-    animation: eye-blink 4s ease-in-out infinite;
-  }
-  .digi-eye::after {
-    content: '';
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-    width: 8px; height: 8px;
-    background: radial-gradient(circle, #fff 0%, rgba(162,155,254,0.9) 50%, transparent 100%);
-    border-radius: 50%;
-    animation: eye-scan 2s ease-in-out infinite alternate;
-  }
-  @keyframes eye-blink {
-    0%,90%,100%{transform:scaleY(1)}
-    95%{transform:scaleY(0.1)}
-  }
-  @keyframes eye-scan {
-    0%{left:30%} 100%{left:70%}
-  }
+        .avatar-hair {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 120px;
+            background: linear-gradient(180deg, #2d1f3d 0%, #4a3366 50%, #6b4d8a 100%);
+            border-radius: 80px 80px 20px 20px;
+            z-index: -1;
+        }
 
-  /* 眼睛下方数据线 */
-  .digi-eye-lines {
-    position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
-    width: 80px; display: flex; flex-direction: column; gap: 3px;
-  }
-  .digi-eye-line {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(107,92,231,0.4), transparent);
-    animation: data-flow 1.5s ease-in-out infinite;
-  }
-  .digi-eye-line:nth-child(2){animation-delay:0.3s;width:60%;margin-left:20%}
-  @keyframes data-flow { 0%,100%{opacity:0.3} 50%{opacity:0.8} }
+        .avatar-hair::before {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: -10px;
+            width: 60px;
+            height: 120px;
+            background: linear-gradient(180deg, #4a3366 0%, #6b4d8a 100%);
+            border-radius: 30px;
+            transform: rotate(-15deg);
+        }
 
-  /* 鼻子 */
-  .digi-nose {
-    width: 2px; height: 12px;
-    background: linear-gradient(180deg, transparent, rgba(107,92,231,0.5), transparent);
-    margin: 6px 0 4px;
-    border-radius: 1px;
-  }
+        .avatar-hair::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            right: -10px;
+            width: 60px;
+            height: 120px;
+            background: linear-gradient(180deg, #4a3366 0%, #6b4d8a 100%);
+            border-radius: 30px;
+            transform: rotate(15deg);
+        }
 
-  /* 嘴巴 */
-  .digi-mouth {
-    width: 36px; height: 10px;
-    border-radius: 0 0 18px 18px;
-    border: 1.5px solid rgba(162,155,254,0.6);
-    border-top: none;
-    position: relative;
-    box-shadow: 0 0 8px rgba(107,92,231,0.4);
-    overflow: hidden;
-    transition: height 0.1s;
-  }
-  .digi-mouth::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(107,92,231,0.2), rgba(162,155,254,0.1));
-    animation: mouth-idle 3s ease-in-out infinite;
-  }
-  @keyframes mouth-idle { 0%,100%{opacity:0.4} 50%{opacity:0.9} }
+        .avatar-face {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 80px;
+        }
 
-  /* 说话时嘴巴动 */
-  .digi-face.speaking .digi-mouth {
-    animation: mouth-speak 0.15s ease-in-out infinite alternate;
-  }
-  @keyframes mouth-speak { 0%{height:6px;border-radius:0 0 10px 10px} 100%{height:16px;border-radius:0 0 20px 20px} }
+        .avatar-eye {
+            position: absolute;
+            width: 28px;
+            height: 34px;
+            background: linear-gradient(180deg, #3d2d4d 0%, #1a1a2e 100%);
+            border-radius: 50%;
+            top: 10px;
+        }
 
-  /* 面部光效粒子 */
-  .digi-dot {
-    position: absolute;
-    width: 3px; height: 3px; border-radius: 50%;
-    background: rgba(162,155,254,0.7);
-    animation: dot-float 3s ease-in-out infinite;
-  }
-  .digi-dot:nth-child(1){top:20%;left:15%;animation-delay:0s}
-  .digi-dot:nth-child(2){top:35%;right:15%;animation-delay:0.8s}
-  .digi-dot:nth-child(3){top:55%;left:18%;animation-delay:1.6s}
-  .digi-dot:nth-child(4){top:65%;right:18%;animation-delay:0.4s}
-  @keyframes dot-float { 0%,100%{opacity:0.3;transform:translateY(0)} 50%{opacity:1;transform:translateY(-4px)} }
+        .avatar-eye::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 6px;
+            left: 6px;
+            animation: sparkle 2s infinite;
+        }
 
-  /* 颈部 */
-  .digi-neck {
-    width: 28px; height: 18px;
-    background: linear-gradient(180deg, #2a1f6e, #1a1248);
-    border-left: 1px solid rgba(107,92,231,0.4);
-    border-right: 1px solid rgba(107,92,231,0.4);
-    margin-top: -1px;
-  }
+        .avatar-eye.left { left: 8px; }
+        .avatar-eye.right { right: 8px; }
 
-  /* 肩部 */
-  .digi-shoulders {
-    position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
-    width: 160px; height: 55px;
-    background: linear-gradient(180deg, #1a1248 0%, #0d0820 100%);
-    border-radius: 0 0 50% 50%;
-    border-top: 1.5px solid rgba(107,92,231,0.5);
-    border-left: 1px solid rgba(107,92,231,0.3);
-    border-right: 1px solid rgba(107,92,231,0.3);
-    overflow: hidden;
-  }
-  /* 胸前数据板 */
-  .digi-shoulders::after {
-    content: '';
-    position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-    width: 40px; height: 14px;
-    background: linear-gradient(90deg, transparent, rgba(107,92,231,0.2), transparent);
-    border: 1px solid rgba(107,92,231,0.4);
-    border-radius: 3px;
-    animation: chest-data 1.8s ease-in-out infinite;
-  }
-  @keyframes chest-data { 0%,100%{opacity:0.4} 50%{opacity:1} }
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
 
-  /* 底部渐变遮罩 */
-  .digi-bottom-mask {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 50px;
-    background: linear-gradient(180deg, transparent, rgba(13,8,32,0.8));
-    pointer-events: none;
-  }
+        .avatar-mouth {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 10px;
+            background: #e88a9e;
+            border-radius: 0 0 20px 20px;
+            animation: talk 0.1s infinite alternate;
+        }
 
-  /* 外圈 AI 感装饰 */
-  .digi-circuit {
-    position: absolute; inset: 5px; border-radius: 50%;
-    border: 1px solid transparent;
-    background: transparent;
-    pointer-events: none;
-  }
-  .digi-circuit::before {
-    content: '';
-    position: absolute; inset: 0; border-radius: 50%;
-    border: 1px dashed rgba(107,92,231,0.25);
-    animation: circuit-spin 12s linear infinite;
-  }
-  @keyframes circuit-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes talk {
+            0% { height: 8px; }
+            100% { height: 12px; }
+        }
 
-  /* AI 光效叠加层 */
-  .avatar-overlay {
-    position: absolute; inset: 0; border-radius: 50%;
-    background: linear-gradient(180deg, transparent 60%, rgba(107,92,231,0.2) 100%);
-    pointer-events: none;
-  }
-  /* 说话时全脸发光 */
-  .avatar-mouth-glow {
-    position: absolute; inset: 0; border-radius: 50%;
-    background: radial-gradient(ellipse at 50% 65%, rgba(107,92,231,0.3) 0%, transparent 60%);
-    opacity: 0; pointer-events: none; transition: opacity 0.3s;
-  }
-  .avatar-container.speaking .avatar-mouth-glow { opacity: 1; animation: mouth-glow 0.3s ease-in-out infinite alternate; }
-  @keyframes mouth-glow { 0%{opacity:0.3} 100%{opacity:0.8} }
+        .avatar-blush {
+            position: absolute;
+            width: 25px;
+            height: 15px;
+            background: linear-gradient(90deg, transparent, rgba(255, 150, 180, 0.4), transparent);
+            border-radius: 50%;
+            top: 50px;
+        }
 
-  /* 状态 */
-  .status-badge {
-    display: flex; align-items: center; gap: 6px;
-    padding: 5px 14px; border-radius: 20px;
-    background: rgba(0,200,100,0.12);
-    border: 1px solid rgba(0,200,100,0.25);
-    font-size: 12px; color: #00C864; margin-bottom: 10px;
-  }
-  .status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #00C864; animation: blink 1.5s infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        .avatar-blush.left { left: 0; }
+        .avatar-blush.right { right: 0; }
 
-  .avatar-name { font-size: 20px; font-weight: 700; letter-spacing: 1px; margin-bottom: 3px; }
-  .avatar-role { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
+        /* 发光光环 */
+        .glow-ring {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 30px;
+            background: radial-gradient(ellipse, rgba(150, 100, 255, 0.6) 0%, transparent 70%);
+            filter: blur(5px);
+            animation: pulse-glow 2s infinite;
+        }
 
-  /* 声纹 */
-  .voice-bars {
-    display: flex; align-items: center; gap: 3px;
-    height: 36px; margin-bottom: 18px;
-  }
-  .voice-bar {
-    width: 4px; border-radius: 2px;
-    background: linear-gradient(to top, var(--primary), var(--accent));
-    animation: voice-idle 1.5s ease-in-out infinite;
-  }
-  .voice-bars.speaking .voice-bar {
-    animation: voice-speak 0.25s ease-in-out infinite alternate !important;
-  }
-  @keyframes voice-idle { 0%,100%{height:6px} 50%{height:12px} }
-  @keyframes voice-speak { 0%{height:4px} 100%{height:32px} }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        }
 
-  /* 语音控制 */
-  .voice-toggle {
-    display: flex; align-items: center; gap: 7px;
-    padding: 7px 14px; border-radius: 20px;
-    background: var(--glass); border: 1px solid var(--glass-border);
-    color: var(--text-muted); font-size: 12px; cursor: pointer;
-    transition: all 0.2s; margin-bottom: 18px;
-    width: 100%; justify-content: center;
-  }
-  .voice-toggle.on {
-    background: rgba(107,92,231,0.2);
-    border-color: var(--primary);
-    color: var(--primary-light);
-  }
-  .voice-toggle:hover { border-color: var(--primary); color: var(--primary-light); }
+        /* 名字 */
+        .name-badge {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+            backdrop-filter: blur(10px);
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
 
-  /* 快捷提示 */
-  .quick-hints { width: 100%; }
-  .quick-hints-title {
-    font-size: 11px; color: var(--text-muted);
-    letter-spacing: 1px; margin-bottom: 8px; padding-left: 2px;
-  }
-  .hint-chip {
-    display: block; width: 100%;
-    padding: 8px 12px; margin-bottom: 7px;
-    background: var(--glass); border: 1px solid var(--glass-border);
-    border-radius: 10px; color: var(--text-light);
-    font-size: 12px; cursor: pointer; text-align: left;
-    transition: all 0.2s;
-  }
-  .hint-chip:hover {
-    background: rgba(107,92,231,0.2);
-    border-color: var(--primary); transform: translateX(4px);
-  }
+        /* 对话区域 */
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
 
-  /* 右侧对话 */
-  .chat-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .chat-messages {
+            height: 350px;
+            overflow-y: auto;
+            padding: 20px;
+        }
 
-  .chat-messages {
-    flex: 1; overflow-y: auto; padding: 20px 24px;
-    scroll-behavior: smooth;
-  }
-  .chat-messages::-webkit-scrollbar { width: 4px; }
-  .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+            animation: slideIn 0.3s ease-out;
+        }
 
-  /* 消息 */
-  .message {
-    display: flex; gap: 10px; margin-bottom: 18px;
-    animation: msg-in 0.3s ease-out;
-  }
-  @keyframes msg-in { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-  .message.user { flex-direction: row-reverse; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  .msg-avatar {
-    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
-    overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 16px;
-  }
-  .msg-avatar.teacher {
-    border: 2px solid var(--primary-light);
-    box-shadow: 0 0 10px rgba(107,92,231,0.4);
-  }
-  .msg-avatar.teacher img { width: 100%; height: 100%; object-fit: cover; object-position: center top; border-radius: 50%; }
-  .msg-avatar.student {
-    background: linear-gradient(135deg, #2A3A5A, #1A2A4A);
-    border: 2px solid rgba(255,255,255,0.15);
-  }
+        .message.ai {
+            justify-content: flex-start;
+        }
 
-  .msg-content { max-width: 68%; }
-  .msg-name { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; padding-left: 3px; }
-  .message.user .msg-name { text-align: right; padding-right: 3px; }
+        .message.user {
+            justify-content: flex-end;
+        }
 
-  .msg-bubble {
-    padding: 11px 15px; border-radius: 16px;
-    font-size: 14px; line-height: 1.75; word-break: break-word;
-  }
-  .message.teacher .msg-bubble {
-    background: linear-gradient(135deg, rgba(107,92,231,0.22), rgba(107,92,231,0.1));
-    border: 1px solid rgba(107,92,231,0.28);
-    border-radius: 4px 16px 16px 16px;
-  }
-  .message.user .msg-bubble {
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px 4px 16px 16px; text-align: right;
-  }
-  .msg-footer { display: flex; align-items: center; gap: 8px; margin-top: 5px; padding: 0 3px; }
-  .msg-time { font-size: 10px; color: var(--text-muted); }
-  .message.user .msg-footer { flex-direction: row-reverse; }
+        .message-bubble {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
 
-  /* 朗读按钮 */
-  .speak-btn {
-    display: inline-flex; align-items: center; gap: 3px;
-    padding: 2px 9px; border-radius: 10px;
-    background: rgba(107,92,231,0.12); border: 1px solid rgba(107,92,231,0.2);
-    color: var(--text-muted); font-size: 11px; cursor: pointer;
-    transition: all 0.2s;
-  }
-  .speak-btn:hover { background: rgba(107,92,231,0.25); color: var(--primary-light); }
-  .speak-btn.playing { background: rgba(107,92,231,0.3); color: var(--primary-light); }
+        .message.ai .message-bubble {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
 
-  /* 打字动画 */
-  .typing-bubble { display: flex; align-items: center; gap: 5px; padding: 14px 16px; }
-  .typing-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--primary-light); animation: typing 1.2s ease-in-out infinite;
-  }
-  .typing-dot:nth-child(2){ animation-delay:0.2s } .typing-dot:nth-child(3){ animation-delay:0.4s }
-  @keyframes typing { 0%,100%{transform:translateY(0);opacity:0.4} 50%{transform:translateY(-5px);opacity:1} }
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
 
-  /* 输入区 */
-  .chat-input-area {
-    padding: 14px 20px 18px;
-    background: rgba(10,14,26,0.65);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid var(--glass-border);
-  }
-  .input-wrapper {
-    display: flex; align-items: flex-end; gap: 10px;
-    background: var(--glass); border: 1px solid var(--glass-border);
-    border-radius: 16px; padding: 9px 12px; transition: border-color 0.2s;
-  }
-  .input-wrapper:focus-within { border-color: var(--primary); }
-  .chat-input {
-    flex: 1; background: none; border: none; outline: none;
-    color: var(--text-light); font-size: 14px; font-family: inherit;
-    resize: none; max-height: 120px; line-height: 1.6; padding: 2px 0;
-  }
-  .chat-input::placeholder { color: var(--text-muted); }
-  .send-btn {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    border: none; color: #fff; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; flex-shrink: 0; transition: all 0.2s;
-  }
-  .send-btn:hover { transform: scale(1.07); box-shadow: 0 4px 20px rgba(107,92,231,0.5); }
-  .send-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
 
-  .share-bar { display: flex; gap: 7px; margin-top: 9px; }
-  .share-btn {
-    flex: 1; padding: 7px; border-radius: 9px;
-    background: var(--glass); border: 1px solid var(--glass-border);
-    color: var(--text-muted); font-size: 11px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-    transition: all 0.2s;
-  }
-  .share-btn:hover { background: rgba(7,193,96,0.15); color: #07C160; border-color: rgba(7,193,96,0.3); }
-  .share-btn.qr:hover { background: rgba(255,107,157,0.15); color: var(--accent); border-color: rgba(255,107,157,0.3); }
-  .share-btn.copy:hover { background: rgba(107,92,231,0.15); color: var(--primary-light); border-color: rgba(107,92,231,0.3); }
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, #e8d5f2, #d4a5e0);
+        }
 
-  .input-hint { font-size: 10px; color: var(--text-muted); margin-top: 7px; text-align: center; }
+        /* 输入区域 */
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
 
-  /* 弹窗 */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
-    align-items: center; justify-content: center;
-  }
-  .modal-overlay.active { display: flex; }
-  .modal {
-    background: #13172B; border: 1px solid var(--glass-border);
-    border-radius: 20px; padding: 26px; width: 320px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    animation: modal-in 0.3s ease-out;
-  }
-  @keyframes modal-in { from{opacity:0;transform:scale(0.9) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
-  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 7px; }
-  .modal-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
-  .modal-qr { background: #fff; border-radius: 12px; padding: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
-  #qrcode { width: 190px; height: 190px; }
-  .modal-url {
-    background: var(--glass); border: 1px solid var(--glass-border);
-    border-radius: 9px; padding: 9px 12px;
-    font-size: 11px; color: var(--text-muted);
-    word-break: break-all; margin-bottom: 14px;
-  }
-  .modal-actions { display: flex; gap: 9px; }
-  .btn-primary {
-    flex: 1; padding: 9px; border-radius: 9px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    border: none; color: #fff; font-size: 13px; cursor: pointer; transition: all 0.2s;
-  }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(107,92,231,0.4); }
-  .btn-secondary {
-    padding: 9px 14px; border-radius: 9px;
-    background: var(--glass); border: 1px solid var(--glass-border);
-    color: var(--text-light); font-size: 13px; cursor: pointer; transition: all 0.2s;
-  }
-  .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+        .input-area input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.9);
+            font-size: 15px;
+            outline: none;
+        }
 
-  .admin-link {
-    font-size: 11px; color: rgba(255,255,255,0.15);
-    text-decoration: none; cursor: pointer;
-    position: fixed; bottom: 10px; left: 14px; z-index: 20; transition: color 0.3s;
-  }
-  .admin-link:hover { color: var(--text-muted); }
+        .input-area input:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
 
-  @media (max-width: 680px) {
-    .avatar-panel { display: none; }
-  }
-</style>
+        .input-area button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .input-area button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* 功能按钮 */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .action-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        /* 管理后台 */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .admin-content {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #1a1a2e;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .admin-content h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .qa-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .qa-form input, .qa-form textarea {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            background: #0f3460;
+            color: white;
+            font-size: 14px;
+        }
+
+        .qa-form textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .qa-form button {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .qa-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .qa-item {
+            padding: 15px;
+            background: #0f3460;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .qa-item-content {
+            flex: 1;
+        }
+
+        .qa-item-q {
+            font-weight: bold;
+            color: #4facfe;
+            margin-bottom: 5px;
+        }
+
+        .qa-item-a {
+            color: #ddd;
+        }
+
+        .qa-delete {
+            padding: 5px 10px;
+            background: #ff6b6b;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .close-admin {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* 提示框 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* 加载动画 */
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 15px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .digital-human {
+                transform: scale(0.85);
+                margin-bottom: 10px;
+            }
+            
+            .chat-container {
+                max-width: 100%;
+            }
+            
+            .chat-messages {
+                height: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
-<div class="bg-anim"></div>
-<div class="bg-particles" id="particles"></div>
-
-<!-- 顶部栏 -->
-<header class="header">
-  <div>
-    <div class="header-title" id="pageTitle">✨ 老师的数字分身</div>
-    <div class="header-subtitle">AI 智能助教 · 随时为你解答</div>
-  </div>
-  <div class="header-actions">
-    <button class="btn-icon" id="voiceToggleBtn" onclick="toggleVoice()" title="语音朗读开关">🔊</button>
-    <button class="btn-icon" onclick="showQR()" title="分享">📤</button>
-    <button class="btn-icon" onclick="clearChat()" title="清空对话">🗑️</button>
-  </div>
-</header>
-
-<main class="main">
-  <!-- 数字人面板 -->
-  <aside class="avatar-panel">
-    <div class="avatar-wrapper">
-      <div class="avatar-ring"></div>
-      <div class="avatar-ring"></div>
-      <div class="avatar-ring"></div>
-      <div class="avatar-container" id="avatarContainer">
-        <!-- 动态 AI 数字人 -->
-        <div class="digi-face" id="digiFace">
-          <div class="digi-scan"></div>
-          <div class="digi-circuit"></div>
-          <!-- 粒子 -->
-          <div class="digi-dot"></div>
-          <div class="digi-dot"></div>
-          <div class="digi-dot"></div>
-          <div class="digi-dot"></div>
-          <!-- 人物 -->
-          <div style="display:flex;flex-direction:column;align-items:center;position:relative;z-index:2">
-            <div class="digi-head">
-              <div class="digi-hair"></div>
-              <div class="digi-eyes">
-                <div class="digi-eye"></div>
-                <div class="digi-eye"></div>
-                <div class="digi-eye-lines">
-                  <div class="digi-eye-line"></div>
-                  <div class="digi-eye-line"></div>
+    <div class="container">
+        <div class="name-badge">🌟 智慧老师</div>
+        
+        <div class="digital-human">
+            <div class="avatar-container">
+                <div class="avatar">
+                    <div class="avatar-hair"></div>
+                    <div class="avatar-head">
+                        <img id="customAvatarImg" src="avatar.jpg" style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:140px;border-radius:60px 60px 50px 50px;object-fit:cover;">
+                        <div class="avatar-face">
+                            <div class="avatar-blush left"></div>
+                            <div class="avatar-blush right"></div>
+                            <div class="avatar-eye left"></div>
+                            <div class="avatar-eye right"></div>
+                            <div class="avatar-mouth"></div>
+                        </div>
+                    </div>
+                    <div class="avatar-body"></div>
                 </div>
-              </div>
-              <div class="digi-nose"></div>
-              <div class="digi-mouth" id="digiMouth"></div>
+                <div class="glow-ring"></div>
             </div>
-            <div class="digi-neck"></div>
-          </div>
-          <div class="digi-shoulders"></div>
-          <div class="digi-bottom-mask"></div>
         </div>
-        <div class="avatar-overlay"></div>
-        <div class="avatar-mouth-glow"></div>
-      </div>
+
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-avatar">🌸</div>
+                    <div class="message-bubble">
+                        你好呀！我是智慧老师~ 🦋<br><br>
+                        有什么学习上的问题都可以问我哦！<br>
+                        我会尽力帮你解答的！
+                    </div>
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" id="userInput" placeholder="输入你的问题..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="shareToWechat()">📱 微信分享</button>
+            <button class="action-btn" onclick="openAdmin()">⚙️ 管理问答库</button>
+            <button class="action-btn" onclick="clearChat()">🗑️ 清空对话</button>
+        </div>
     </div>
 
-    <div class="status-badge">
-      <div class="status-dot"></div>
-      <span id="statusText">在线解答中</span>
+    <!-- 管理后台 -->
+    <div class="admin-panel" id="adminPanel">
+        <span class="close-admin" onclick="closeAdmin()">×</span>
+        <div class="admin-content">
+            <h2>📚 问答知识库管理</h2>
+            <p style="color: #888; margin-bottom: 20px;">在这里添加常见问题和答案，学生问相关问题时我会自动回答</p>
+            
+            <div class="qa-form">
+                <input type="text" id="questionInput" placeholder="问题（例如：什么是Python？）">
+                <textarea id="answerInput" placeholder="答案（例如：Python是一种高级编程语言...）"></textarea>
+                <button onclick="addQA()">➕ 添加问答</button>
+            </div>
+
+            <h3 style="margin: 20px 0;">已添加的问答 (点击可复制)</h3>
+            <div class="qa-list" id="qaList"></div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #16213e; border-radius: 10px;">
+                <h4>📷 自定义数字人形象</h4>
+                <p style="color: #888; margin: 10px 0; font-size: 14px;">上传你的照片作为数字人形象</p>
+                <input type="file" id="avatarUpload" accept="image/*" onchange="handleAvatarUpload(event)" style="margin-bottom: 10px;">
+                <button class="action-btn" onclick="resetAvatar()">🔄 恢复默认形象</button>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: #16213e; border-radius: 10px;">
+                <h4>🔊 语音设置</h4>
+                <p style="color: #888; margin: 10px 0; font-size: 14px;">AI回答时自动朗读</p>
+                <button class="action-btn" id="soundToggle" onclick="toggleSound()">🔊 语音开启</button>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: #16213e; border-radius: 10px;">
+                <h4>💾 数据操作</h4>
+                <p style="color: #888; margin: 10px 0; font-size: 14px;">点击下方按钮导出/导入问答数据</p>
+                <button class="action-btn" onclick="exportData()">📤 导出数据</button>
+                <button class="action-btn" onclick="importData()">📥 导入数据</button>
+                <input type="file" id="importFile" style="display: none;" onchange="handleImport(event)">
+            </div>
+        </div>
     </div>
 
-    <div class="avatar-name" id="teacherName">老师</div>
-    <div class="avatar-role" id="teacherRole">您的专属 AI 数字助教</div>
+    <div class="toast" id="toast"></div>
 
-    <!-- 声纹可视化 -->
-    <div class="voice-bars" id="voiceBars">
-      <div class="voice-bar" style="animation-delay:0s;height:8px"></div>
-      <div class="voice-bar" style="animation-delay:0.1s;height:15px"></div>
-      <div class="voice-bar" style="animation-delay:0.2s;height:6px"></div>
-      <div class="voice-bar" style="animation-delay:0.3s;height:20px"></div>
-      <div class="voice-bar" style="animation-delay:0.4s;height:10px"></div>
-      <div class="voice-bar" style="animation-delay:0.5s;height:8px"></div>
-      <div class="voice-bar" style="animation-delay:0.6s;height:22px"></div>
-      <div class="voice-bar" style="animation-delay:0.7s;height:12px"></div>
-      <div class="voice-bar" style="animation-delay:0.8s;height:7px"></div>
-      <div class="voice-bar" style="animation-delay:0.9s;height:17px"></div>
-      <div class="voice-bar" style="animation-delay:1.0s;height:9px"></div>
-      <div class="voice-bar" style="animation-delay:1.1s;height:24px"></div>
-    </div>
+    <script>
+        // 问答知识库
+        let qaDatabase = JSON.parse(localStorage.getItem('teacherQA')) || [
+            { q: '你好', a: '你好呀！很高兴见到你！有什么问题想问老师吗？' },
+            { q: '你是谁', a: '我是智慧老师，是一个AI助手，专门帮助同学们解决学习上的问题！' },
+            { q: '有什么用', a: '我可以帮你解答各学科的问题，比如数学、物理、化学、编程等。有不懂的问题尽管问我！' }
+        ];
 
-    <!-- 语音开关 -->
-    <button class="voice-toggle on" id="voiceToggleSide" onclick="toggleVoice()">
-      <span id="voiceIcon">🔊</span>
-      <span id="voiceLabel">语音朗读：开启</span>
-    </button>
+        // 保存到本地存储
+        function saveQA() {
+            localStorage.setItem('teacherQA', JSON.stringify(qaDatabase));
+        }
 
-    <!-- 快捷问题 -->
-    <div class="quick-hints">
-      <div class="quick-hints-title">💡 试试问我</div>
-      <div id="hintList"></div>
-    </div>
-  </aside>
+        // 显示提示
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
 
-  <!-- 对话区 -->
-  <section class="chat-panel">
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="chat-input-area">
-      <div class="input-wrapper">
-        <textarea class="chat-input" id="chatInput" placeholder="输入你的问题…" rows="1"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
-      </div>
-      <div class="share-bar">
-        <button class="share-btn" onclick="showQR()">📤 分享给同学</button>
-        <button class="share-btn qr" onclick="showQR()">📱 扫码访问</button>
-        <button class="share-btn copy" onclick="copyLink()">🔗 复制链接</button>
-      </div>
-      <div class="input-hint">Enter 发送 · Shift+Enter 换行</div>
-    </div>
-  </section>
-</main>
+        // 发送消息
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
 
-<a class="admin-link" href="admin.html">⚙</a>
+            addMessage(message, 'user');
+            input.value = '';
 
-<!-- 分享弹窗 -->
-<div class="modal-overlay" id="shareModal">
-  <div class="modal">
-    <div class="modal-title">📤 分享给同学</div>
-    <div class="modal-sub">截图或扫码，可直接在微信中转发访问</div>
-    <div class="modal-qr"><canvas id="qrcode"></canvas></div>
-    <div class="modal-url" id="shareUrl">正在生成…</div>
-    <div class="modal-actions">
-      <button class="btn-primary" onclick="copyLink(); closeModal()">📋 复制链接</button>
-      <button class="btn-secondary" onclick="closeModal()">关闭</button>
-    </div>
-  </div>
-</div>
+            // 显示输入中
+            showTyping();
 
-<script src="qrcode.min.js"></script>
-<script>
-// ========== 知识库 ==========
-function getKB() { try { return JSON.parse(localStorage.getItem('teacherKB') || '[]'); } catch(e) { return []; } }
-const defaultKB = [
-  { q: "你好", a: "你好同学！😊 我是老师的数字分身，有什么问题尽管问我，我会尽力帮你解答！" },
-  { q: "老师是谁", a: "我是老师的 AI 数字助教，代表老师为同学们答疑解惑，老师会持续更新我的知识库~" },
-  { q: "怎么联系老师", a: "如需直接联系老师，请通过班级群或学校官方渠道，我可以解答大部分学习相关问题哦！" },
-  { q: "作业", a: "关于作业的具体内容，请参考老师在班级群发布的通知。有知识点疑问欢迎直接问我！" },
-  { q: "谢谢", a: "不客气！学习路上有任何问题随时来找我 😄 祝你学习进步！" },
-];
-if (!localStorage.getItem('teacherKB')) localStorage.setItem('teacherKB', JSON.stringify(defaultKB));
-if (!localStorage.getItem('teacherName')) localStorage.setItem('teacherName', '老师');
-if (!localStorage.getItem('teacherRole')) localStorage.setItem('teacherRole', '您的专属 AI 数字助教');
+            // 模拟AI思考
+            setTimeout(() => {
+                removeTyping();
+                const answer = getAnswer(message);
+                addMessage(answer, 'ai');
+            }, 800 + Math.random() * 1000);
+        }
 
-// ========== 初始化 ==========
-const teacherNameStr = localStorage.getItem('teacherName') || '老师';
-const teacherRoleStr = localStorage.getItem('teacherRole') || '您的专属 AI 数字助教';
-document.getElementById('teacherName').textContent = teacherNameStr;
-document.getElementById('teacherRole').textContent = teacherRoleStr;
-document.getElementById('pageTitle').textContent = '✨ ' + teacherNameStr + ' 的数字分身';
-document.title = teacherNameStr + ' · 数字分身';
+        // 语音播放功能
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                // 停止之前的语音
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                
+                // 选择中文语音
+                const voices = window.speechSynthesis.getVoices();
+                const chineseVoice = voices.find(v => v.lang.includes('zh'));
+                if (chineseVoice) utterance.voice = chineseVoice;
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
 
-// 粒子
-const pEl = document.getElementById('particles');
-for (let i = 0; i < 22; i++) {
-  const p = document.createElement('div');
-  p.className = 'particle';
-  const sz = Math.random() * 6 + 2;
-  p.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:hsl(${Math.random()*60+240},70%,60%);animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s`;
-  pEl.appendChild(p);
-}
+        // 添加消息
+        function addMessage(text, type) {
+            const messages = document.getElementById('chatMessages');
+            const avatar = type === 'ai' ? '🌸' : '👤';
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.innerHTML = `
+                ${type === 'ai' ? '<div class="message-avatar">' + avatar + '</div>' : ''}
+                <div class="message-bubble">${text}</div>
+                ${type === 'user' ? '<div class="message-avatar">' + avatar + '</div>' : ''}
+            `;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+            
+            // AI回答时自动播放语音
+            if (type === 'ai') {
+                // 提取纯文本（去除HTML标签）
+                const plainText = text.replace(/<[^>]*>/g, '');
+                speakText(plainText);
+            }
+        }
 
-// 快捷问题
-const hints = ['你好，介绍一下自己', '老师布置了哪些作业？', '考试范围是什么？', '帮我解释一个概念'];
-const hintList = document.getElementById('hintList');
-hints.forEach(h => {
-  const chip = document.createElement('button');
-  chip.className = 'hint-chip';
-  chip.textContent = h;
-  chip.onclick = () => { document.getElementById('chatInput').value = h; sendMessage(); };
-  hintList.appendChild(chip);
-});
+        // 显示输入中
+        function showTyping() {
+            const messages = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'message ai';
+            div.id = 'typingIndicator';
+            div.innerHTML = `
+                <div class="message-avatar">🌸</div>
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
 
-// ========== 语音朗读 ==========
-let voiceEnabled = true;
-let currentUtterance = null;
-let currentSpeakBtn = null;
+        // 移除输入中
+        function removeTyping() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
 
-function toggleVoice() {
-  voiceEnabled = !voiceEnabled;
-  const btn = document.getElementById('voiceToggleBtn');
-  const side = document.getElementById('voiceToggleSide');
-  const icon = document.getElementById('voiceIcon');
-  const label = document.getElementById('voiceLabel');
-  if (voiceEnabled) {
-    btn.classList.add('active');
-    side.classList.add('on');
-    icon.textContent = '🔊'; label.textContent = '语音朗读：开启';
-  } else {
-    btn.classList.remove('active');
-    side.classList.remove('on');
-    icon.textContent = '🔇'; label.textContent = '语音朗读：关闭';
-    stopSpeaking();
-  }
-}
+        // 智能回答
+        function getAnswer(question) {
+            const q = question.toLowerCase();
+            
+            // 精确匹配
+            for (const item of qaDatabase) {
+                if (q.includes(item.q.toLowerCase())) {
+                    return item.a;
+                }
+            }
+            
+            // 关键词匹配
+            const keywords = {
+                '数学': '关于数学问题，你可以具体描述一下是哪个知识点吗？比如代数、几何、微积分等',
+                '物理': '物理问题很有趣呢！请问是力学、电磁学还是光学部分？',
+                '化学': '化学是很有意思的学科！请问你想了解哪方面的内容？',
+                '编程': '编程方面的问题我可以帮你！是Python、Java还是其他语言？',
+                '代码': '编程方面的问题我可以帮你！是Python、Java还是其他语言？',
+                '英语': '英语学习要找对方法哦！背单词、练听力还是语法？',
+                '语文': '语文学习要多读多写！文言文、现代文还是作文？',
+                '历史': '历史问题很有意思！请问是哪一段历史时期？',
+                '地理': '地理问题问对人啦！自然地理还是人文地理？'
+            };
 
-function speak(text, btn) {
-  if (!('speechSynthesis' in window)) return;
-  stopSpeaking();
-  const clean = text.replace(/[😊😄👋📚🔊🔇📤📱🔗💡✨👩‍🏫👤➤⚙]/g, '').replace(/\*+/g, '').trim();
-  const utter = new SpeechSynthesisUtterance(clean);
-  utter.lang = 'zh-CN';
-  utter.rate = 0.92;
-  utter.pitch = 1.15;
-  utter.volume = 1;
+            for (const [key, value] of Object.entries(keywords)) {
+                if (q.includes(key)) return value;
+            }
 
-  // 优先选最自然的中文女声
-  const voices = window.speechSynthesis.getVoices();
-  const femaleKeywords = ['Xiaoxiao','晓晓','Xiaoyi','晓伊','Huihui','惠惠','Yaoyao','Tingting','tingting','female','Female','woman'];
-  let zhVoice = null;
-  for (const kw of femaleKeywords) {
-    zhVoice = voices.find(v => v.lang.startsWith('zh') && v.name.includes(kw));
-    if (zhVoice) break;
-  }
-  if (!zhVoice) zhVoice = voices.find(v => v.lang === 'zh-CN') || voices.find(v => v.lang.startsWith('zh'));
-  if (zhVoice) utter.voice = zhVoice;
+            // 默认回复
+            const defaults = [
+                '这个问题真棒！让我想想怎么回答你...',
+                '好问题！让我组织一下语言~',
+                '嗯，这是一个很有意思的问题！',
+                '我明白了！让我来帮你解答~'
+            ];
+            return defaults[Math.floor(Math.random() * defaults.length)] + '<br><br>不过我目前知识库里的相关内容较少，你可以让老师先添加一些常见问题到知识库里，这样我就能更好地回答你啦！';
+        }
 
-  utter.onstart = () => {
-    currentSpeakBtn = btn;
-    if (btn) btn.classList.add('playing');
-    if (btn) btn.textContent = '⏹ 停止';
-    document.getElementById('avatarContainer').classList.add('speaking');
-    document.getElementById('voiceBars').classList.add('speaking');
-    document.getElementById('statusText').textContent = '正在朗读…';
-    // 数字人嘴巴动起来
-    const digiFace = document.getElementById('digiFace');
-    if (digiFace) digiFace.classList.add('speaking');
-  };
-  utter.onend = utter.onerror = () => {
-    if (btn) { btn.classList.remove('playing'); btn.textContent = '🔊 朗读'; }
-    document.getElementById('avatarContainer').classList.remove('speaking');
-    document.getElementById('voiceBars').classList.remove('speaking');
-    document.getElementById('statusText').textContent = '在线解答中';
-    const digiFace = document.getElementById('digiFace');
-    if (digiFace) digiFace.classList.remove('speaking');
-    currentUtterance = null; currentSpeakBtn = null;
-  };
-  currentUtterance = utter;
-  window.speechSynthesis.speak(utter);
-}
+        // 键盘回车
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
 
-function stopSpeaking() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  if (currentSpeakBtn) { currentSpeakBtn.classList.remove('playing'); currentSpeakBtn.textContent = '🔊 朗读'; }
-  document.getElementById('avatarContainer').classList.remove('speaking');
-  document.getElementById('voiceBars').classList.remove('speaking');
-  document.getElementById('statusText').textContent = '在线解答中';
-  currentUtterance = null; currentSpeakBtn = null;
-}
+        // 清空对话
+        function clearChat() {
+            const messages = document.getElementById('chatMessages');
+            messages.innerHTML = `
+                <div class="message ai">
+                    <div class="message-avatar">🌸</div>
+                    <div class="message-bubble">
+                        对话已清空~<br>
+                        有什么新问题吗？
+                    </div>
+                </div>
+            `;
+            showToast('对话已清空');
+        }
 
-function handleSpeakBtn(btn, text) {
-  if (currentUtterance && currentSpeakBtn === btn) { stopSpeaking(); return; }
-  speak(text, btn);
-}
+        // 微信分享
+        function shareToWechat() {
+            const shareUrl = window.location.href;
+            
+            // 复制链接
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showToast('🔗 链接已复制！请打开微信粘贴分享给同学');
+            }).catch(() => {
+                // 尝试其他方法
+                const text = '🌟 智慧老师 - 你的AI学习伙伴\n有问题随时问我！\n' + window.location.href;
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('📱 分享内容已复制！');
+                }).catch(() => {
+                    showToast('请手动复制页面链接分享');
+                });
+            });
+        }
 
-// 语音初始化（部分浏览器需要先触发）
-window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-// 初始状态：开启
-document.getElementById('voiceToggleBtn').classList.add('active');
+        // 打开管理面板
+        function openAdmin() {
+            const password = prompt('请输入管理密码:');
+            if (password !== '119313') {
+                showToast('密码错误！');
+                return;
+            }
+            document.getElementById('adminPanel').style.display = 'block';
+            renderQAList();
+        }
 
-// ========== 对话功能 ==========
-let isTyping = false;
-function getTime() { return new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}); }
+        // 关闭管理面板
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
 
-function addMessage(type, text, autoSpeak = false) {
-  const container = document.getElementById('chatMessages');
-  const msg = document.createElement('div');
-  msg.className = `message ${type}`;
-  const isTeacher = type === 'teacher';
-  const msgId = 'msg_' + Date.now();
+        // 添加问答
+        function addQA() {
+            const q = document.getElementById('questionInput').value.trim();
+            const a = document.getElementById('answerInput').value.trim();
+            
+            if (!q || !a) {
+                showToast('请填写问题和答案');
+                return;
+            }
 
-  msg.innerHTML = `
-    <div class="msg-avatar ${isTeacher ? 'teacher' : 'student'}">
-      ${isTeacher ? `<img src="avatar.jpg" alt="" onerror="this.parentNode.innerHTML='👩‍🏫'">` : '👤'}
-    </div>
-    <div class="msg-content">
-      <div class="msg-name">${isTeacher ? teacherNameStr + '（数字分身）' : '你'}</div>
-      <div class="msg-bubble" id="${msgId}">${text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</div>
-      <div class="msg-footer">
-        <div class="msg-time">${getTime()}</div>
-        ${isTeacher ? `<button class="speak-btn" onclick="handleSpeakBtn(this, ${JSON.stringify(text)})">🔊 朗读</button>` : ''}
-      </div>
-    </div>
-  `;
-  container.appendChild(msg);
-  container.scrollTop = container.scrollHeight;
+            qaDatabase.push({ q, a });
+            saveQA();
+            
+            document.getElementById('questionInput').value = '';
+            document.getElementById('answerInput').value = '';
+            
+            renderQAList();
+            showToast('添加成功！');
+        }
 
-  // 自动朗读
-  if (isTeacher && autoSpeak && voiceEnabled) {
-    setTimeout(() => {
-      const btn = msg.querySelector('.speak-btn');
-      speak(text, btn);
-    }, 100);
-  }
-  return msg;
-}
+        // 渲染问答列表
+        function renderQAList() {
+            const list = document.getElementById('qaList');
+            list.innerHTML = qaDatabase.map((item, index) => `
+                <div class="qa-item">
+                    <div class="qa-item-content">
+                        <div class="qa-item-q">Q${index + 1}: ${item.q}</div>
+                        <div class="qa-item-a">A: ${item.a.substring(0, 50)}${item.a.length > 50 ? '...' : ''}</div>
+                    </div>
+                    <button class="qa-delete" onclick="deleteQA(${index})">删除</button>
+                </div>
+            `).join('');
+        }
 
-function addTyping() {
-  const container = document.getElementById('chatMessages');
-  const msg = document.createElement('div');
-  msg.className = 'message teacher'; msg.id = 'typingMsg';
-  msg.innerHTML = `
-    <div class="msg-avatar teacher"><img src="avatar.jpg" alt="" onerror="this.parentNode.innerHTML='👩‍🏫'"></div>
-    <div class="msg-content">
-      <div class="msg-name">${teacherNameStr}（数字分身）</div>
-      <div class="msg-bubble typing-bubble">
-        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
-      </div>
-    </div>`;
-  container.appendChild(msg);
-  container.scrollTop = container.scrollHeight;
-  document.getElementById('avatarContainer').classList.add('speaking');
-  document.getElementById('voiceBars').classList.add('speaking');
-  document.getElementById('statusText').textContent = '思考中…';
-}
+        // 删除问答
+        function deleteQA(index) {
+            if (confirm('确定删除这个问题吗？')) {
+                qaDatabase.splice(index, 1);
+                saveQA();
+                renderQAList();
+                showToast('已删除');
+            }
+        }
 
-function removeTyping() {
-  const t = document.getElementById('typingMsg');
-  if (t) t.remove();
-  if (!currentUtterance) {
-    document.getElementById('avatarContainer').classList.remove('speaking');
-    document.getElementById('voiceBars').classList.remove('speaking');
-    document.getElementById('statusText').textContent = '在线解答中';
-  }
-}
+        // 导出数据
+        function exportData() {
+            const data = JSON.stringify(qaDatabase, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '智慧老师问答库.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📤 数据已导出');
+        }
 
-// 问答引擎
-function findAnswer(question) {
-  const kb = getKB();
-  const q = question.toLowerCase().trim();
-  if (!q) return null;
-  for (const item of kb) { if (item.q && q === item.q.toLowerCase()) return item.a; }
-  let best = null, bestScore = 0;
-  for (const item of kb) {
-    if (!item.q) continue;
-    const keywords = item.q.toLowerCase().split(/[\s，,。.？?！!]+/).filter(k => k.length > 0);
-    let score = 0;
-    for (const kw of keywords) { if (q.includes(kw) || kw.includes(q)) score += kw.length; }
-    if (score > bestScore) { bestScore = score; best = item; }
-  }
-  if (best && bestScore >= 1) return best.a;
-  for (const item of kb) {
-    if (!item.q) continue;
-    const sim = computeSim(q, item.q.toLowerCase());
-    if (sim > 0.5) return item.a;
-  }
-  return null;
-}
-function computeSim(a, b) {
-  if (a === b) return 1;
-  const longer = a.length > b.length ? a : b, shorter = a.length > b.length ? b : a;
-  if (longer.length === 0) return 1;
-  let m = 0; for (const c of shorter) { if (longer.includes(c)) m++; }
-  return m / longer.length;
-}
-function fallback(q) {
-  const arr = [
-    `这个问题很好！我目前的知识库里暂时没有相关内容，老师会持续更新我的知识哦 😊`,
-    `嗯，让我想想……这道题超出了我现在的知识范围，请稍后联系老师或等待知识库更新！`,
-    `感谢提问！关于"${q.slice(0,15)}${q.length>15?'…':''}"老师还未录入相关内容，请直接联系老师~`,
-    `这个问题我还在学习中 📚 老师会定期更新知识库，敬请期待！`,
-  ];
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+        // 导入数据
+        function importData() {
+            document.getElementById('importFile').click();
+        }
 
-async function sendMessage() {
-  if (isTyping) return;
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = ''; input.style.height = 'auto';
-  document.getElementById('sendBtn').disabled = true;
-  isTyping = true;
-  addMessage('user', text);
-  const delay = 700 + Math.random() * 1000;
-  addTyping();
-  await new Promise(r => setTimeout(r, delay));
-  removeTyping();
-  const answer = findAnswer(text) || fallback(text);
-  addMessage('teacher', answer, true); // true = 自动朗读
-  document.getElementById('sendBtn').disabled = false;
-  isTyping = false;
-}
+        // 处理导入
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-// 欢迎语
-const welcomeMsg = localStorage.getItem('teacherWelcome') ||
-  `你好同学！👋 我是**${teacherNameStr}**的数字分身，随时为你答疑解惑。\n有什么问题，直接输入或点击左侧快捷问题吧！`;
-setTimeout(() => addMessage('teacher', welcomeMsg, true), 600);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (Array.isArray(data)) {
+                        qaDatabase = data;
+                        saveQA();
+                        renderQAList();
+                        showToast('📥 数据导入成功！');
+                    } else {
+                        showToast('文件格式错误');
+                    }
+                } catch (err) {
+                    showToast('文件解析失败');
+                }
+            };
+            reader.readAsText(file);
+        }
 
-// 输入框
-const chatInput = document.getElementById('chatInput');
-chatInput.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 120) + 'px'; });
-chatInput.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+        // 头像处理
+        let customAvatar = localStorage.getItem('teacherAvatar') || 'avatar.jpg';
+        let soundEnabled = localStorage.getItem('teacherSound') !== 'false';
 
-function clearChat() {
-  if (confirm('确定清空当前对话记录吗？')) {
-    stopSpeaking();
-    document.getElementById('chatMessages').innerHTML = '';
-    setTimeout(() => addMessage('teacher', '对话已清空！有新问题随时问我 😊', true), 300);
-  }
-}
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-// ========== 分享 ==========
-function showQR() {
-  document.getElementById('shareModal').classList.add('active');
-  const url = window.location.href;
-  document.getElementById('shareUrl').textContent = url;
-  const canvas = document.getElementById('qrcode');
-  canvas.width = 190; canvas.height = 190;
-  if (typeof QRCode !== 'undefined') {
-    try { new QRCode(canvas, { text: url, width: 190, height: 190, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.M }); } catch(e) {}
-  } else {
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#f5f5f5'; ctx.fillRect(0,0,190,190);
-    ctx.fillStyle = '#333'; ctx.font = '13px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('请复制链接发给同学', 95, 85); ctx.fillText('在浏览器中打开访问', 95, 108);
-  }
-}
-function closeModal() { document.getElementById('shareModal').classList.remove('active'); }
-function copyLink() {
-  const url = window.location.href;
-  navigator.clipboard.writeText(url).then(() => showToast('链接已复制！粘贴到微信发给同学 📎'))
-    .catch(() => { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('链接已复制！'); });
-}
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.textContent = msg;
-  t.style.cssText = `position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(107,92,231,0.95);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;z-index:999;box-shadow:0 4px 20px rgba(107,92,231,0.4);animation:msg-in 0.3s ease-out`;
-  document.body.appendChild(t); setTimeout(() => t.remove(), 2800);
-}
-document.getElementById('shareModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-</script>
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                customAvatar = e.target.result;
+                localStorage.setItem('teacherAvatar', customAvatar);
+                applyCustomAvatar();
+                showToast('📷 头像已更新！');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function applyCustomAvatar() {
+            const avatarImg = document.getElementById('customAvatarImg');
+            if (avatarImg) {
+                avatarImg.src = customAvatar;
+                avatarImg.style.display = 'block';
+            }
+        }
+
+        function resetAvatar() {
+            localStorage.removeItem('teacherAvatar');
+            customAvatar = 'avatar.jpg';
+            const avatarImg = document.getElementById('customAvatarImg');
+            if (avatarImg) {
+                avatarImg.src = 'avatar.jpg';
+                avatarImg.style.display = 'block';
+            }
+            showToast('已恢复默认形象');
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('teacherSound', soundEnabled);
+            const btn = document.getElementById('soundToggle');
+            btn.textContent = soundEnabled ? '🔊 语音开启' : '🔇 语音关闭';
+            showToast(soundEnabled ? '🔊 语音已开启' : '🔇 语音已关闭');
+        }
+
+        // 修改语音播放函数，检查开关状态
+        const originalSpeakText = speakText;
+        speakText = function(text) {
+            if (!soundEnabled) return;
+            originalSpeakText(text);
+        };
+
+        // 初始化
+        renderQAList();
+        
+        // 应用自定义头像
+        window.addEventListener('DOMContentLoaded', function() {
+            applyCustomAvatar();
+            
+            // 初始化语音按钮状态
+            const soundBtn = document.getElementById('soundToggle');
+            if (soundBtn) {
+                soundBtn.textContent = soundEnabled ? '🔊 语音开启' : '🔇 语音关闭';
+            }
+        });
 </body>
 </html>
