@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>后台管理 · 数字分身</title>
+<title>鍚庡彴绠＄悊 路 鏁板瓧鍒嗚韩</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,7 +29,7 @@
     min-height: 100vh;
   }
 
-  /* 侧边栏 */
+  /* 渚ц竟鏍?*/
   .sidebar {
     position: fixed; left: 0; top: 0; bottom: 0;
     width: 220px; background: var(--bg2);
@@ -71,7 +71,7 @@
   }
   .view-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(107,92,231,0.4); }
 
-  /* 主内容 */
+  /* 涓诲唴瀹?*/
   .main { margin-left: 220px; padding: 28px 32px; min-height: 100vh; }
 
   .page { display: none; }
@@ -80,7 +80,7 @@
   .page-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
   .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
 
-  /* 统计卡片 */
+  /* 缁熻鍗＄墖 */
   .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
   .stat-card {
     background: var(--bg3); border: 1px solid var(--border);
@@ -90,7 +90,7 @@
   .stat-val { font-size: 28px; font-weight: 700; }
   .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-  /* 基本信息 */
+  /* 鍩烘湰淇℃伅 */
   .card {
     background: var(--bg3); border: 1px solid var(--border);
     border-radius: 14px; padding: 22px; margin-bottom: 20px;
@@ -112,7 +112,7 @@
   .form-input::placeholder { color: var(--muted); }
   .form-textarea { min-height: 80px; resize: vertical; }
 
-  /* 工具栏 */
+  /* 宸ュ叿鏍?*/
   .toolbar {
     display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
   }
@@ -140,7 +140,7 @@
   .btn-ghost { background: var(--glass); border: 1px solid var(--border); color: var(--text); }
   .btn-ghost:hover { background: rgba(255,255,255,0.1); }
 
-  /* 知识库表格 */
+  /* 鐭ヨ瘑搴撹〃鏍?*/
   .kb-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
   .kb-table th {
     font-size: 11px; color: var(--muted); text-align: left;
@@ -164,7 +164,7 @@
   .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 7px; }
   .kb-idx { color: var(--muted); font-size: 12px; }
 
-  /* 添加表单弹窗 */
+  /* 娣诲姞琛ㄥ崟寮圭獥 */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 100;
     background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
@@ -185,13 +185,13 @@
   .modal-body { display: flex; flex-direction: column; gap: 14px; }
   .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
 
-  /* 空状态 */
+  /* 绌虹姸鎬?*/
   .empty-state {
     text-align: center; padding: 60px 20px; color: var(--muted);
   }
   .empty-icon { font-size: 48px; margin-bottom: 12px; }
 
-  /* 导入导出 */
+  /* 瀵煎叆瀵煎嚭 */
   .import-area {
     border: 2px dashed var(--border); border-radius: 12px;
     padding: 24px; text-align: center; color: var(--muted);
@@ -214,7 +214,7 @@
     to { opacity: 1; transform: none; }
   }
 
-  /* 密码保护 */
+  /* 瀵嗙爜淇濇姢 */
   .lock-overlay {
     position: fixed; inset: 0; z-index: 200;
     background: #0A0E1A;
@@ -251,102 +251,105 @@
 </head>
 <body>
 
-<!-- 密码锁 -->
+<!-- 瀵嗙爜閿?-->
 <div class="lock-overlay" id="lockOverlay">
   <div class="lock-box">
-    <div class="lock-icon">🔐</div>
-    <div class="lock-title">后台管理</div>
-    <div class="lock-sub">请输入管理员密码进入</div>
-    <input class="lock-input" type="password" id="pwdInput" placeholder="••••••" maxlength="20"
+    <div class="lock-icon">馃攼</div>
+    <div class="lock-title">鍚庡彴绠＄悊</div>
+    <div class="lock-sub">璇疯緭鍏ョ鐞嗗憳瀵嗙爜杩涘叆</div>
+    <input class="lock-input" type="password" id="pwdInput" placeholder="鈥⑩€⑩€⑩€⑩€⑩€? maxlength="20"
       onkeydown="if(event.key==='Enter')checkPwd()">
     <br>
-    <button class="lock-btn" onclick="checkPwd()">进入管理后台</button>
+    <button class="lock-btn" onclick="checkPwd()">杩涘叆绠＄悊鍚庡彴</button>
     <div class="lock-err" id="pwdErr"></div>
-    <div style="font-size:11px;color:var(--muted);margin-top:16px">管理员密码已由老师设置</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:16px">绠＄悊鍛樺瘑鐮佸凡鐢辫€佸笀璁剧疆</div>
   </div>
 </div>
 
-<!-- 侧边栏 -->
+<!-- 渚ц竟鏍?-->
 <nav class="sidebar">
   <div class="logo">
-    <div class="logo-icon">✨</div>
-    <div class="logo-title">数字分身后台</div>
-    <div class="logo-sub">知识库管理系统</div>
+    <div class="logo-icon">鉁?/div>
+    <div class="logo-title">鏁板瓧鍒嗚韩鍚庡彴</div>
+    <div class="logo-sub">鐭ヨ瘑搴撶鐞嗙郴缁?/div>
   </div>
   <div class="nav">
     <div class="nav-item active" onclick="showPage('dashboard', this)">
-      <span class="icon">📊</span> 数据概览
+      <span class="icon">馃搳</span> 鏁版嵁姒傝
     </div>
     <div class="nav-item" onclick="showPage('profile', this)">
-      <span class="icon">👩‍🏫</span> 数字人设置
+      <span class="icon">馃懇鈥嶐煆?/span> 鏁板瓧浜鸿缃?
     </div>
     <div class="nav-item" onclick="showPage('knowledge', this)">
-      <span class="icon">📚</span> 知识库管理
+      <span class="icon">馃摎</span> 鐭ヨ瘑搴撶鐞?
     </div>
     <div class="nav-item" onclick="showPage('import', this)">
-      <span class="icon">📥</span> 批量导入
+      <span class="icon">馃摜</span> 鎵归噺瀵煎叆
+    </div>
+    <div class="nav-item" onclick="showPage('questions', this)">
+      <span class="icon">馃摑</span> 闂鎼滈泦
     </div>
     <div class="nav-item" onclick="showPage('settings', this)">
-      <span class="icon">⚙️</span> 系统设置
+      <span class="icon">鈿欙笍</span> 绯荤粺璁剧疆
     </div>
   </div>
   <div class="sidebar-footer">
     <a class="view-btn" href="index.html" target="_blank">
-      <span>👁️</span> 查看前台
+      <span>馃憗锔?/span> 鏌ョ湅鍓嶅彴
     </a>
   </div>
 </nav>
 
-<!-- 主内容 -->
+<!-- 涓诲唴瀹?-->
 <div class="main">
 
-  <!-- 概览页 -->
+  <!-- 姒傝椤?-->
   <div class="page active" id="page-dashboard">
-    <div class="page-title">📊 数据概览</div>
-    <div class="page-sub">查看知识库状态和使用情况</div>
+    <div class="page-title">馃搳 鏁版嵁姒傝</div>
+    <div class="page-sub">鏌ョ湅鐭ヨ瘑搴撶姸鎬佸拰浣跨敤鎯呭喌</div>
     <div class="stats" id="statsGrid"></div>
     <div class="card">
-      <div class="card-title">📌 最近添加的问答</div>
+      <div class="card-title">馃搶 鏈€杩戞坊鍔犵殑闂瓟</div>
       <div id="recentList"></div>
     </div>
   </div>
 
-  <!-- 数字人设置 -->
+  <!-- 鏁板瓧浜鸿缃?-->
   <div class="page" id="page-profile">
-    <div class="page-title">👩‍🏫 数字人设置</div>
-    <div class="page-sub">设置你的数字分身的名字、简介和欢迎语</div>
+    <div class="page-title">馃懇鈥嶐煆?鏁板瓧浜鸿缃?/div>
+    <div class="page-sub">璁剧疆浣犵殑鏁板瓧鍒嗚韩鐨勫悕瀛椼€佺畝浠嬪拰娆㈣繋璇?/div>
     <div class="card">
-      <div class="card-title">✏️ 基本信息</div>
+      <div class="card-title">鉁忥笍 鍩烘湰淇℃伅</div>
       <div class="form-grid">
         <div class="form-group">
-          <label>老师姓名</label>
-          <input class="form-input" id="profileName" placeholder="例如：张老师、李教授">
+          <label>鑰佸笀濮撳悕</label>
+          <input class="form-input" id="profileName" placeholder="渚嬪锛氬紶鑰佸笀銆佹潕鏁欐巿">
         </div>
         <div class="form-group">
-          <label>职位/角色描述</label>
-          <input class="form-input" id="profileRole" placeholder="例如：数学老师 · 高三">
+          <label>鑱屼綅/瑙掕壊鎻忚堪</label>
+          <input class="form-input" id="profileRole" placeholder="渚嬪锛氭暟瀛﹁€佸笀 路 楂樹笁">
         </div>
         <div class="form-group" style="grid-column: 1/-1">
-          <label>欢迎语（学生打开时显示）</label>
-          <textarea class="form-input form-textarea" id="profileWelcome" placeholder="例如：你好同学！我是张老师的数字助手，有任何问题都可以问我~"></textarea>
+          <label>娆㈣繋璇紙瀛︾敓鎵撳紑鏃舵樉绀猴級</label>
+          <textarea class="form-input form-textarea" id="profileWelcome" placeholder="渚嬪锛氫綘濂藉悓瀛︼紒鎴戞槸寮犺€佸笀鐨勬暟瀛楀姪鎵嬶紝鏈変换浣曢棶棰橀兘鍙互闂垜~"></textarea>
         </div>
       </div>
       <div style="margin-top: 16px">
-        <button class="btn btn-primary" onclick="saveProfile()">💾 保存设置</button>
+        <button class="btn btn-primary" onclick="saveProfile()">馃捑 淇濆瓨璁剧疆</button>
       </div>
     </div>
   </div>
 
-  <!-- 知识库管理 -->
+  <!-- 鐭ヨ瘑搴撶鐞?-->
   <div class="page" id="page-knowledge">
-    <div class="page-title">📚 知识库管理</div>
-    <div class="page-sub">添加、编辑和管理学生问答知识库</div>
+    <div class="page-title">馃摎 鐭ヨ瘑搴撶鐞?/div>
+    <div class="page-sub">娣诲姞銆佺紪杈戝拰绠＄悊瀛︾敓闂瓟鐭ヨ瘑搴?/div>
 
     <div class="toolbar">
-      <input class="search-box" id="kbSearch" placeholder="🔍 搜索问题或答案…" oninput="renderKB()">
-      <button class="btn btn-primary" onclick="openAddModal()">➕ 添加问答</button>
-      <button class="btn btn-success" onclick="exportKB()">📤 导出</button>
-      <button class="btn btn-ghost" onclick="renderKB()">🔄 刷新</button>
+      <input class="search-box" id="kbSearch" placeholder="馃攳 鎼滅储闂鎴栫瓟妗堚€? oninput="renderKB()">
+      <button class="btn btn-primary" onclick="openAddModal()">鉃?娣诲姞闂瓟</button>
+      <button class="btn btn-success" onclick="exportKB()">馃摛 瀵煎嚭</button>
+      <button class="btn btn-ghost" onclick="renderKB()">馃攧 鍒锋柊</button>
     </div>
 
     <div class="card" style="padding: 0; overflow: hidden;">
@@ -354,108 +357,131 @@
         <thead>
           <tr>
             <th style="width:40px">#</th>
-            <th style="width:35%">问题</th>
-            <th>答案</th>
-            <th style="width:120px">操作</th>
+            <th style="width:35%">闂</th>
+            <th>绛旀</th>
+            <th style="width:120px">鎿嶄綔</th>
           </tr>
         </thead>
         <tbody id="kbTableBody"></tbody>
       </table>
       <div id="kbEmpty" class="empty-state" style="display:none">
-        <div class="empty-icon">📭</div>
-        <div>暂无知识库内容</div>
-        <div style="font-size:12px;margin-top:6px">点击「添加问答」开始录入</div>
+        <div class="empty-icon">馃摥</div>
+        <div>鏆傛棤鐭ヨ瘑搴撳唴瀹?/div>
+        <div style="font-size:12px;margin-top:6px">鐐瑰嚮銆屾坊鍔犻棶绛斻€嶅紑濮嬪綍鍏?/div>
       </div>
     </div>
   </div>
 
-  <!-- 批量导入 -->
+  <!-- 鎵归噺瀵煎叆 -->
   <div class="page" id="page-import">
-    <div class="page-title">📥 批量导入</div>
-    <div class="page-sub">通过 JSON 或文本格式批量导入知识库内容</div>
+    <div class="page-title">馃摜 鎵归噺瀵煎叆</div>
+    <div class="page-sub">閫氳繃 JSON 鎴栨枃鏈牸寮忔壒閲忓鍏ョ煡璇嗗簱鍐呭</div>
 
     <div class="card">
-      <div class="card-title">📋 JSON 格式导入</div>
+      <div class="card-title">馃搵 JSON 鏍煎紡瀵煎叆</div>
       <div style="font-size:13px; color:var(--muted); margin-bottom:14px; line-height:1.7">
-        将以下格式的 JSON 粘贴到下方文本框，点击导入按钮即可批量添加：<br>
-        <code style="background:var(--bg2);padding:8px 12px;border-radius:8px;display:block;margin-top:8px;font-size:12px;color:#8B7FF0">[{"q": "问题1", "a": "答案1"}, {"q": "问题2", "a": "答案2"}]</code>
+        灏嗕互涓嬫牸寮忕殑 JSON 绮樿创鍒颁笅鏂规枃鏈锛岀偣鍑诲鍏ユ寜閽嵆鍙壒閲忔坊鍔狅細<br>
+        <code style="background:var(--bg2);padding:8px 12px;border-radius:8px;display:block;margin-top:8px;font-size:12px;color:#8B7FF0">[{"q": "闂1", "a": "绛旀1"}, {"q": "闂2", "a": "绛旀2"}]</code>
       </div>
       <textarea class="form-input form-textarea" id="importJson" style="min-height:160px;font-family:monospace;font-size:12px"
-        placeholder='[&#10;  {"q": "这道题怎么做？", "a": "首先分析题目条件..."},&#10;  {"q": "考试范围是什么？", "a": "本次考试范围包括..."}&#10;]'></textarea>
+        placeholder='[&#10;  {"q": "杩欓亾棰樻€庝箞鍋氾紵", "a": "棣栧厛鍒嗘瀽棰樼洰鏉′欢..."},&#10;  {"q": "鑰冭瘯鑼冨洿鏄粈涔堬紵", "a": "鏈鑰冭瘯鑼冨洿鍖呮嫭..."}&#10;]'></textarea>
       <div style="margin-top:14px; display:flex; gap:10px">
-        <button class="btn btn-primary" onclick="importJSON()">📥 导入 JSON</button>
-        <button class="btn btn-ghost" onclick="document.getElementById('importJson').value=''">清空</button>
+        <button class="btn btn-primary" onclick="importJSON()">馃摜 瀵煎叆 JSON</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('importJson').value=''">娓呯┖</button>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">📝 逐行文本导入</div>
+      <div class="card-title">馃摑 閫愯鏂囨湰瀵煎叆</div>
       <div style="font-size:13px; color:var(--muted); margin-bottom:14px">
-        每行格式：<code style="background:var(--bg2);padding:2px 8px;border-radius:5px;color:#8B7FF0">问题 | 答案</code>（用竖线分隔）
+        姣忚鏍煎紡锛?code style="background:var(--bg2);padding:2px 8px;border-radius:5px;color:#8B7FF0">闂 | 绛旀</code>锛堢敤绔栫嚎鍒嗛殧锛?
       </div>
       <textarea class="form-input form-textarea" id="importText" style="min-height:160px;font-family:monospace;font-size:12px"
-        placeholder="这道题怎么做？ | 首先分析题目条件...&#10;考试范围是什么？ | 本次考试范围包括..."></textarea>
+        placeholder="杩欓亾棰樻€庝箞鍋氾紵 | 棣栧厛鍒嗘瀽棰樼洰鏉′欢...&#10;鑰冭瘯鑼冨洿鏄粈涔堬紵 | 鏈鑰冭瘯鑼冨洿鍖呮嫭..."></textarea>
       <div style="margin-top:14px">
-        <button class="btn btn-primary" onclick="importText()">📥 导入文本</button>
+        <button class="btn btn-primary" onclick="importText()">馃摜 瀵煎叆鏂囨湰</button>
       </div>
     </div>
   </div>
 
-  <!-- 系统设置 -->
+  <!-- 闂鎼滈泦 -->
+  <div class="page" id="page-questions">
+    <div class="page-title">馃摑 瀛︾敓闂鎼滈泦</div>
+    <div class="page-sub">鏌ョ湅瀛︾敓鎻愪氦鐨勯棶棰橈紝鍙竴閿浆涓虹煡璇嗗簱鏉＄洰</div>
+
+    <div class="toolbar">
+      <input class="search-box" id="qSearch" placeholder="馃攳 鎼滅储闂鍐呭鈥? oninput="renderQuestions()">
+      <button class="btn btn-success" onclick="exportQuestions()">馃摛 瀵煎嚭</button>
+      <button class="btn btn-danger" onclick="clearQuestions()">馃棏锔?娓呯┖</button>
+    </div>
+
+    <div class="stats" id="qStatsGrid" style="margin-bottom:20px"></div>
+
+    <div class="card" id="qCard">
+      <div id="qEmpty" class="empty-state" style="display:none">
+        <div class="empty-icon">馃摥</div>
+        <div>鏆傛湁瀛︾敓鎻愪氦闂</div>
+        <div style="font-size:12px;margin-top:6px">鍛婅瘔鍚屽浠紝鍙互鍦ㄨ繖閲屾彁浜ゆ兂闂殑闂</div>
+      </div>
+      <div id="qList"></div>
+    </div>
+  </div>
+
+  <!-- 绯荤粺璁剧疆 -->
   <div class="page" id="page-settings">
-    <div class="page-title">⚙️ 系统设置</div>
-    <div class="page-sub">管理密码和系统数据</div>
+    <div class="page-title">鈿欙笍 绯荤粺璁剧疆</div>
+    <div class="page-sub">绠＄悊瀵嗙爜鍜岀郴缁熸暟鎹?/div>
 
     <div class="card">
-      <div class="card-title">🔐 修改管理员密码</div>
+      <div class="card-title">馃攼 淇敼绠＄悊鍛樺瘑鐮?/div>
       <div class="form-grid" style="max-width:400px">
         <div class="form-group">
-          <label>旧密码</label>
-          <input class="form-input" type="password" id="oldPwd" placeholder="当前密码">
+          <label>鏃у瘑鐮?/label>
+          <input class="form-input" type="password" id="oldPwd" placeholder="褰撳墠瀵嗙爜">
         </div>
         <div class="form-group">
-          <label>新密码</label>
-          <input class="form-input" type="password" id="newPwd" placeholder="6位以上">
+          <label>鏂板瘑鐮?/label>
+          <input class="form-input" type="password" id="newPwd" placeholder="6浣嶄互涓?>
         </div>
       </div>
       <div style="margin-top:14px">
-        <button class="btn btn-primary" onclick="changePwd()">🔒 修改密码</button>
+        <button class="btn btn-primary" onclick="changePwd()">馃敀 淇敼瀵嗙爜</button>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">🗂️ 数据管理</div>
+      <div class="card-title">馃梻锔?鏁版嵁绠＄悊</div>
       <div style="display:flex; gap:12px; flex-wrap:wrap">
-        <button class="btn btn-success" onclick="exportAll()">📦 导出全部数据</button>
-        <button class="btn btn-danger" onclick="clearAll()">🗑️ 清空知识库</button>
+        <button class="btn btn-success" onclick="exportAll()">馃摝 瀵煎嚭鍏ㄩ儴鏁版嵁</button>
+        <button class="btn btn-danger" onclick="clearAll()">馃棏锔?娓呯┖鐭ヨ瘑搴?/button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- 添加/编辑弹窗 -->
+<!-- 娣诲姞/缂栬緫寮圭獥 -->
 <div class="modal-overlay" id="kbModal">
   <div class="modal">
-    <div class="modal-title" id="modalTitle">➕ 添加问答</div>
+    <div class="modal-title" id="modalTitle">鉃?娣诲姞闂瓟</div>
     <div class="modal-body">
       <div class="form-group">
-        <label>学生问题（关键词/完整问句均可）</label>
-        <input class="form-input" id="modalQ" placeholder="例如：这道题怎么解？作业截止时间？">
+        <label>瀛︾敓闂锛堝叧閿瘝/瀹屾暣闂彞鍧囧彲锛?/label>
+        <input class="form-input" id="modalQ" placeholder="渚嬪锛氳繖閬撻鎬庝箞瑙ｏ紵浣滀笟鎴鏃堕棿锛?>
       </div>
       <div class="form-group">
-        <label>答案内容</label>
-        <textarea class="form-input form-textarea" id="modalA" style="min-height:120px" placeholder="输入详细的答案内容…"></textarea>
+        <label>绛旀鍐呭</label>
+        <textarea class="form-input form-textarea" id="modalA" style="min-height:120px" placeholder="杈撳叆璇︾粏鐨勭瓟妗堝唴瀹光€?></textarea>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">取消</button>
-      <button class="btn btn-primary" onclick="saveKBItem()">💾 保存</button>
+      <button class="btn btn-ghost" onclick="closeModal()">鍙栨秷</button>
+      <button class="btn btn-primary" onclick="saveKBItem()">馃捑 淇濆瓨</button>
     </div>
   </div>
 </div>
 
 <script>
-// ========== 密码验证 ==========
+// ========== 瀵嗙爜楠岃瘉 ==========
 const DEFAULT_PWD = '119313';
 function getPwd() { return localStorage.getItem('adminPwd') || DEFAULT_PWD; }
 
@@ -465,7 +491,7 @@ function checkPwd() {
     document.getElementById('lockOverlay').style.display = 'none';
     init();
   } else {
-    document.getElementById('pwdErr').textContent = '密码错误，请重试';
+    document.getElementById('pwdErr').textContent = '瀵嗙爜閿欒锛岃閲嶈瘯';
     document.getElementById('pwdInput').value = '';
   }
 }
@@ -474,46 +500,54 @@ document.getElementById('pwdInput').addEventListener('keydown', e => { if(e.key=
 function changePwd() {
   const oldV = document.getElementById('oldPwd').value;
   const newV = document.getElementById('newPwd').value;
-  if (oldV !== getPwd()) { showToast('⚠️ 旧密码错误', 'warn'); return; }
-  if (newV.length < 4) { showToast('⚠️ 新密码至少4位', 'warn'); return; }
+  if (oldV !== getPwd()) { showToast('鈿狅笍 鏃у瘑鐮侀敊璇?, 'warn'); return; }
+  if (newV.length < 4) { showToast('鈿狅笍 鏂板瘑鐮佽嚦灏?浣?, 'warn'); return; }
   localStorage.setItem('adminPwd', newV);
   document.getElementById('oldPwd').value = '';
   document.getElementById('newPwd').value = '';
-  showToast('✅ 密码已修改');
+  showToast('鉁?瀵嗙爜宸蹭慨鏀?);
 }
 
-// ========== 知识库操作 ==========
+// ========== 鐭ヨ瘑搴撴搷浣?==========
 function getKB() { try { return JSON.parse(localStorage.getItem('teacherKB') || '[]'); } catch(e) { return []; } }
 function saveKB(data) { localStorage.setItem('teacherKB', JSON.stringify(data)); }
 
 let editingIdx = -1;
 
 function init() {
-  // 加载设置
-  document.getElementById('profileName').value = localStorage.getItem('teacherName') || '老师';
-  document.getElementById('profileRole').value = localStorage.getItem('teacherRole') || '您的专属 AI 数字助教';
+  // 鍔犺浇璁剧疆
+  document.getElementById('profileName').value = localStorage.getItem('teacherName') || '鑰佸笀';
+  document.getElementById('profileRole').value = localStorage.getItem('teacherRole') || '鎮ㄧ殑涓撳睘 AI 鏁板瓧鍔╂暀';
   document.getElementById('profileWelcome').value = localStorage.getItem('teacherWelcome') || '';
   renderDashboard();
   renderKB();
+  renderQuestions();
+  renderQStats();
 }
 
 function renderDashboard() {
   const kb = getKB();
+  const questions = getQuestions();
   document.getElementById('statsGrid').innerHTML = `
     <div class="stat-card">
-      <div class="stat-icon">📚</div>
+      <div class="stat-icon">馃摎</div>
       <div class="stat-val">${kb.length}</div>
-      <div class="stat-label">知识库条目</div>
+      <div class="stat-label">鐭ヨ瘑搴撴潯鐩?/div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon">💡</div>
+      <div class="stat-icon">馃挕</div>
       <div class="stat-val">${kb.filter(i=>i.q&&i.a).length}</div>
-      <div class="stat-label">有效问答对</div>
+      <div class="stat-label">鏈夋晥闂瓟瀵?/div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon">📝</div>
+      <div class="stat-icon">馃摑</div>
+      <div class="stat-val">${questions.length}</div>
+      <div class="stat-label">鎼滈泦闂鏁?/div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">馃搳</div>
       <div class="stat-val">${kb.reduce((s,i)=>(i.a?s+i.a.length:s), 0)}</div>
-      <div class="stat-label">总字符数</div>
+      <div class="stat-label">鎬诲瓧绗︽暟</div>
     </div>
   `;
   const recent = [...kb].slice(-5).reverse();
@@ -523,11 +557,11 @@ function renderDashboard() {
         <div style="width:28px;height:28px;border-radius:50%;background:rgba(107,92,231,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;color:#8B7FF0;flex-shrink:0">${i+1}</div>
         <div>
           <div style="font-size:14px;font-weight:500;color:#8B7FF0;margin-bottom:4px">${escHtml(item.q)}</div>
-          <div style="font-size:13px;color:var(--muted)">${escHtml(item.a?.slice(0,80))}${item.a?.length>80?'…':''}</div>
+          <div style="font-size:13px;color:var(--muted)">${escHtml(item.a?.slice(0,80))}${item.a?.length>80?'鈥?:''}</div>
         </div>
       </div>
     `).join('')
-    : '<div style="color:var(--muted);font-size:13px;padding:12px 0">暂无数据</div>';
+    : '<div style="color:var(--muted);font-size:13px;padding:12px 0">鏆傛棤鏁版嵁</div>';
 }
 
 function renderKB() {
@@ -552,8 +586,8 @@ function renderKB() {
       <td><div class="kb-a">${escHtml(item.a)}</div></td>
       <td>
         <div class="kb-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${item._idx})">✏️</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteItem(${item._idx})">🗑️</button>
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal(${item._idx})">鉁忥笍</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem(${item._idx})">馃棏锔?/button>
         </div>
       </td>
     </tr>
@@ -562,7 +596,7 @@ function renderKB() {
 
 function openAddModal() {
   editingIdx = -1;
-  document.getElementById('modalTitle').textContent = '➕ 添加问答';
+  document.getElementById('modalTitle').textContent = '鉃?娣诲姞闂瓟';
   document.getElementById('modalQ').value = '';
   document.getElementById('modalA').value = '';
   document.getElementById('kbModal').classList.add('active');
@@ -572,7 +606,7 @@ function openAddModal() {
 function openEditModal(idx) {
   const kb = getKB();
   editingIdx = idx;
-  document.getElementById('modalTitle').textContent = '✏️ 编辑问答';
+  document.getElementById('modalTitle').textContent = '鉁忥笍 缂栬緫闂瓟';
   document.getElementById('modalQ').value = kb[idx]?.q || '';
   document.getElementById('modalA').value = kb[idx]?.a || '';
   document.getElementById('kbModal').classList.add('active');
@@ -583,14 +617,14 @@ function closeModal() { document.getElementById('kbModal').classList.remove('act
 function saveKBItem() {
   const q = document.getElementById('modalQ').value.trim();
   const a = document.getElementById('modalA').value.trim();
-  if (!q || !a) { showToast('⚠️ 问题和答案不能为空', 'warn'); return; }
+  if (!q || !a) { showToast('鈿狅笍 闂鍜岀瓟妗堜笉鑳戒负绌?, 'warn'); return; }
   const kb = getKB();
   if (editingIdx >= 0) {
     kb[editingIdx] = { q, a };
-    showToast('✅ 已更新');
+    showToast('鉁?宸叉洿鏂?);
   } else {
     kb.push({ q, a });
-    showToast('✅ 已添加');
+    showToast('鉁?宸叉坊鍔?);
   }
   saveKB(kb);
   closeModal();
@@ -599,16 +633,16 @@ function saveKBItem() {
 }
 
 function deleteItem(idx) {
-  if (!confirm('确定删除这条问答吗？')) return;
+  if (!confirm('纭畾鍒犻櫎杩欐潯闂瓟鍚楋紵')) return;
   const kb = getKB();
   kb.splice(idx, 1);
   saveKB(kb);
   renderKB();
   renderDashboard();
-  showToast('🗑️ 已删除');
+  showToast('馃棏锔?宸插垹闄?);
 }
 
-// ========== 导入/导出 ==========
+// ========== 瀵煎叆/瀵煎嚭 ==========
 function importJSON() {
   const raw = document.getElementById('importJson').value.trim();
   try {
@@ -619,9 +653,9 @@ function importJSON() {
     kb.push(...valid);
     saveKB(kb);
     renderKB(); renderDashboard();
-    showToast(`✅ 导入成功 ${valid.length} 条`);
+    showToast(`鉁?瀵煎叆鎴愬姛 ${valid.length} 鏉);
     document.getElementById('importJson').value = '';
-  } catch(e) { showToast('⚠️ JSON 格式错误，请检查', 'warn'); }
+  } catch(e) { showToast('鈿狅笍 JSON 鏍煎紡閿欒锛岃妫€鏌?, 'warn'); }
 }
 
 function importText() {
@@ -631,12 +665,12 @@ function importText() {
     const [q, ...rest] = l.split('|');
     return { q: q.trim(), a: rest.join('|').trim() };
   }).filter(i => i.q && i.a);
-  if (!items.length) { showToast('⚠️ 未找到有效数据', 'warn'); return; }
+  if (!items.length) { showToast('鈿狅笍 鏈壘鍒版湁鏁堟暟鎹?, 'warn'); return; }
   const kb = getKB();
   kb.push(...items);
   saveKB(kb);
   renderKB(); renderDashboard();
-  showToast(`✅ 导入成功 ${items.length} 条`);
+  showToast(`鉁?瀵煎叆鎴愬姛 ${items.length} 鏉);
   document.getElementById('importText').value = '';
 }
 
@@ -645,9 +679,9 @@ function exportKB() {
   const blob = new Blob([JSON.stringify(kb, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = '知识库_' + new Date().toLocaleDateString('zh-CN').replace(/\//g, '-') + '.json';
+  a.download = '鐭ヨ瘑搴揰' + new Date().toLocaleDateString('zh-CN').replace(/\//g, '-') + '.json';
   a.click();
-  showToast('📥 已导出知识库');
+  showToast('馃摜 宸插鍑虹煡璇嗗簱');
 }
 
 function exportAll() {
@@ -661,30 +695,30 @@ function exportAll() {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = '数字分身数据备份_' + new Date().toLocaleDateString('zh-CN').replace(/\//g, '-') + '.json';
+  a.download = '鏁板瓧鍒嗚韩鏁版嵁澶囦唤_' + new Date().toLocaleDateString('zh-CN').replace(/\//g, '-') + '.json';
   a.click();
-  showToast('📦 已导出全部数据');
+  showToast('馃摝 宸插鍑哄叏閮ㄦ暟鎹?);
 }
 
 function clearAll() {
-  if (!confirm('⚠️ 确定清空全部知识库吗？此操作不可恢复！')) return;
+  if (!confirm('鈿狅笍 纭畾娓呯┖鍏ㄩ儴鐭ヨ瘑搴撳悧锛熸鎿嶄綔涓嶅彲鎭㈠锛?)) return;
   saveKB([]);
   renderKB(); renderDashboard();
-  showToast('🗑️ 已清空知识库');
+  showToast('馃棏锔?宸叉竻绌虹煡璇嗗簱');
 }
 
-// ========== 数字人设置 ==========
+// ========== 鏁板瓧浜鸿缃?==========
 function saveProfile() {
-  const name = document.getElementById('profileName').value.trim() || '老师';
+  const name = document.getElementById('profileName').value.trim() || '鑰佸笀';
   const role = document.getElementById('profileRole').value.trim();
   const welcome = document.getElementById('profileWelcome').value.trim();
   localStorage.setItem('teacherName', name);
   localStorage.setItem('teacherRole', role);
   if (welcome) localStorage.setItem('teacherWelcome', welcome);
-  showToast('✅ 设置已保存，刷新前台即可生效');
+  showToast('鉁?璁剧疆宸蹭繚瀛橈紝鍒锋柊鍓嶅彴鍗冲彲鐢熸晥');
 }
 
-// ========== 页面切换 ==========
+// ========== 椤甸潰鍒囨崲 ==========
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -692,6 +726,7 @@ function showPage(id, el) {
   if (el) el.classList.add('active');
   if (id === 'knowledge') renderKB();
   if (id === 'dashboard') renderDashboard();
+  if (id === 'questions') { renderQuestions(); renderQStats(); }
 }
 
 // ========== Toast ==========
@@ -709,10 +744,103 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// 弹窗点击外部关闭
+// 寮圭獥鐐瑰嚮澶栭儴鍏抽棴
 document.getElementById('kbModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
+
+// ========== 闂鎼滈泦 ==========
+function getQuestions() { try { return JSON.parse(localStorage.getItem('teacherQuestions') || '[]'); } catch(e) { return []; } }
+function saveQuestions(data) { localStorage.setItem('teacherQuestions', JSON.stringify(data)); }
+
+function renderQStats() {
+  const questions = getQuestions();
+  document.getElementById('qStatsGrid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-icon">馃摑</div>
+      <div class="stat-val">${questions.length}</div>
+      <div class="stat-label">鎻愪氦闂鎬绘暟</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">馃摎</div>
+      <div class="stat-val">${getKB().length}</div>
+      <div class="stat-label">褰撳墠鐭ヨ瘑搴撴潯鐩?/div>
+    </div>
+  `;
+}
+
+function renderQuestions() {
+  const questions = getQuestions();
+  const query = (document.getElementById('qSearch')?.value || '').toLowerCase();
+  const filtered = questions.filter(q => !query || q.text?.toLowerCase().includes(query));
+
+  const list = document.getElementById('qList');
+  const empty = document.getElementById('qEmpty');
+  const card = document.getElementById('qCard');
+
+  if (filtered.length === 0) {
+    list.innerHTML = '';
+    card.style.padding = '0';
+    empty.style.display = 'block';
+    if (questions.length > 0 && query) {
+      empty.querySelector('div').textContent = '鏈壘鍒板尮閰嶇殑闂';
+    }
+    return;
+  }
+  card.style.padding = '22px';
+  empty.style.display = 'none';
+
+  list.innerHTML = filtered.map((item, i) => `
+    <div style="display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);align-items:flex-start" id="q-item-${i}">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,167,38,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;color:#FFA726;flex-shrink:0">${questions.indexOf(item) + 1}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px;word-break:break-all">${escHtml(item.text)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">鎻愪氦鏃堕棿锛?{item.time || '鏈煡'}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-success btn-sm" onclick="convertToKB('${escHtml(item.text).replace(/'/g, "\\'")}')">馃摎 杞负鐭ヨ瘑搴?/button>
+          <button class="btn btn-danger btn-sm" onclick="deleteQuestion(${questions.indexOf(item)})">馃棏锔?鍒犻櫎</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function convertToKB(questionText) {
+  // 鎵撳紑娣诲姞寮圭獥锛岄鍏堝～鍏ラ棶棰?
+  openAddModal();
+  document.getElementById('modalQ').value = questionText;
+  document.getElementById('modalTitle').textContent = '馃摎 杞负鐭ヨ瘑搴撴潯鐩?;
+  showToast('宸插皢闂濉叆锛岃濉啓绛旀鍚庝繚瀛?);
+}
+
+function deleteQuestion(idx) {
+  if (!confirm('纭畾鍒犻櫎杩欐潯闂璁板綍鍚楋紵')) return;
+  const questions = getQuestions();
+  questions.splice(idx, 1);
+  saveQuestions(questions);
+  renderQuestions();
+  renderQStats();
+  showToast('馃棏锔?宸插垹闄?);
+}
+
+function clearQuestions() {
+  if (!confirm('鈿狅笍 纭畾娓呯┖鎵€鏈夋悳闆嗙殑闂璁板綍鍚楋紵')) return;
+  saveQuestions([]);
+  renderQuestions();
+  renderQStats();
+  showToast('馃棏锔?宸叉竻绌洪棶棰樿褰?);
+}
+
+function exportQuestions() {
+  const questions = getQuestions();
+  if (!questions.length) { showToast('鈿狅笍 鏆傛棤闂鍙鍑?, 'warn'); return; }
+  const blob = new Blob([JSON.stringify(questions, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '鎼滈泦闂_' + new Date().toLocaleDateString('zh-CN').replace(/\//g, '-') + '.json';
+  a.click();
+  showToast('馃摜 宸插鍑烘悳闆嗛棶棰?);
+}
 </script>
 </body>
 </html>
