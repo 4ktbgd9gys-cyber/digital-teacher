@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>老师的数字分身</title>
+<title>张雯老师的数字分身</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -597,7 +597,7 @@
 <!-- 顶部栏 -->
 <header class="header">
   <div>
-    <div class="header-title" id="pageTitle">✨ 老师的数字分身</div>
+    <div class="header-title" id="pageTitle">✨ 张雯老师的数字分身</div>
     <div class="header-subtitle">AI 智能助教 · 随时为你解答</div>
   </div>
   <div class="header-actions">
@@ -615,7 +615,7 @@
       <div class="avatar-ring"></div>
       <div class="avatar-ring"></div>
       <div class="avatar-container" id="avatarContainer">
-        <img class="avatar-photo" src="avatar.jpg" alt="老师头像"
+        <img class="avatar-photo" src="avatar.jpg" alt="张雯老师头像"
           onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex'">
         <!-- 照片加载失败时的备用 -->
         <div id="avatarFallback" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:64px;background:linear-gradient(135deg,#4A3CC4,#6B5CE7)">👩‍🏫</div>
@@ -629,7 +629,7 @@
       <span id="statusText">在线解答中</span>
     </div>
 
-    <div class="avatar-name" id="teacherName">老师</div>
+    <div class="avatar-name" id="teacherName">张雯老师</div>
     <div class="avatar-role" id="teacherRole">您的专属 AI 数字助教</div>
 
     <!-- 声纹可视化 -->
@@ -700,14 +700,14 @@
 // ========== 知识库 ==========
 function getKB() { try { return JSON.parse(localStorage.getItem('teacherKB') || '[]'); } catch(e) { return []; } }
 const defaultKB = [
-  { q: "你好", a: "你好同学！😊 我是老师的数字分身，有什么问题尽管问我，我会尽力帮你解答！" },
-  { q: "老师是谁", a: "我是老师的 AI 数字助教，代表老师为同学们答疑解惑，老师会持续更新我的知识库~" },
-  { q: "怎么联系老师", a: "如需直接联系老师，请通过班级群或学校官方渠道，我可以解答大部分学习相关问题哦！" },
-  { q: "作业", a: "关于作业的具体内容，请参考老师在班级群发布的通知。有知识点疑问欢迎直接问我！" },
+  { q: "你好", a: "你好同学！😊 我是张雯老师的数字分身，有什么问题尽管问我，我会尽力帮你解答！" },
+  { q: "老师是谁", a: "我是张雯老师的 AI 数字助教，代表张雯老师为同学们答疑解惑，老师会持续更新我的知识库~" },
+  { q: "怎么联系老师", a: "如需直接联系张雯老师，请通过班级群或学校官方渠道，我可以解答大部分学习相关问题哦！" },
+  { q: "作业", a: "关于作业的具体内容，请参考张雯老师在班级群发布的通知。有知识点疑问欢迎直接问我！" },
   { q: "谢谢", a: "不客气！学习路上有任何问题随时来找我 😄 祝你学习进步！" },
 ];
 if (!localStorage.getItem('teacherKB')) localStorage.setItem('teacherKB', JSON.stringify(defaultKB));
-if (!localStorage.getItem('teacherName')) localStorage.setItem('teacherName', '老师');
+if (!localStorage.getItem('teacherName')) localStorage.setItem('teacherName', '张雯老师');
 if (!localStorage.getItem('teacherRole')) localStorage.setItem('teacherRole', '您的专属 AI 数字助教');
 
 // ========== 初始化 ==========
@@ -918,10 +918,10 @@ function computeSim(a, b) {
 }
 function fallback(q) {
   const arr = [
-    `这个问题很好！我目前的知识库里暂时没有相关内容，老师会持续更新我的知识哦 😊`,
-    `嗯，让我想想……这道题超出了我现在的知识范围，请稍后联系老师或等待知识库更新！`,
-    `感谢提问！关于"${q.slice(0,15)}${q.length>15?'…':''}"老师还未录入相关内容，请直接联系老师~`,
-    `这个问题我还在学习中 📚 老师会定期更新知识库，敬请期待！`,
+    `这个问题很好！我目前的知识库里暂时没有相关内容，张雯老师会持续更新我的知识哦 😊`,
+    `嗯，让我想想……这道题超出了我现在的知识范围，请稍后联系张雯老师或等待知识库更新！`,
+    `感谢提问！关于"${q.slice(0,15)}${q.length>15?'…':''}"张雯老师还未录入相关内容，请直接联系老师~`,
+    `这个问题我还在学习中 📚 张雯老师会定期更新知识库，敬请期待！`,
   ];
   return arr[Math.floor(Math.random() * arr.length)];
 }
