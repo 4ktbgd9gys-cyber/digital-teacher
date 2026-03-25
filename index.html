@@ -539,59 +539,58 @@
 
   .input-hint { font-size: 10px; color: var(--text-muted); margin-top: 7px; text-align: center; }
 
-  /* 问题搜集 */
-  .question-box {
-    margin-top: 12px;
+  /* 问题搜集按钮（与分享按钮并排） */
+  .share-btn.question:hover { background: rgba(107,92,231,0.15); color: var(--primary-light); border-color: rgba(107,92,231,0.3); }
+
+  /* 问题输入弹层 */
+  .question-popup {
+    display: none;
+    margin-top: 9px;
     background: linear-gradient(135deg, rgba(107,92,231,0.12), rgba(255,107,157,0.06));
     border: 1px solid rgba(107,92,231,0.25);
-    border-radius: 14px;
-    padding: 14px 16px;
+    border-radius: 12px;
+    padding: 12px 14px;
+    animation: fadeInUp 0.2s ease-out;
   }
-  .question-box-header {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 13px; font-weight: 600; color: var(--primary-light);
-    margin-bottom: 10px;
-  }
-  .question-box-icon { font-size: 18px; }
-  .question-box-form { display: flex; gap: 8px; align-items: flex-end; }
+  .question-popup.open { display: block; }
+  .question-popup-form { display: flex; gap: 8px; align-items: flex-end; }
   .question-input {
     flex: 1;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(107,92,231,0.2);
-    border-radius: 10px;
-    padding: 9px 13px;
-    color: var(--text);
+    border-radius: 9px;
+    padding: 8px 12px;
+    color: var(--text-light);
     font-size: 13px;
     font-family: inherit;
     resize: none;
     outline: none;
     transition: border-color 0.2s;
-    min-height: 60px;
+    min-height: 52px;
+    max-height: 90px;
   }
   .question-input:focus { border-color: rgba(107,92,231,0.6); }
   .question-input::placeholder { color: var(--text-muted); }
-  .question-submit {
-    padding: 9px 16px;
-    border-radius: 10px;
+  .question-send-btn {
+    padding: 8px 14px;
+    border-radius: 9px;
     background: linear-gradient(135deg, var(--primary), #4A3CC4);
     color: #fff;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     border: none;
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;
     flex-shrink: 0;
+    height: 36px;
   }
-  .question-submit:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(107,92,231,0.4); }
-  .question-submit:active { transform: translateY(0); }
-  .question-hint { font-size: 10px; color: var(--text-muted); margin-top: 7px; }
+  .question-send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(107,92,231,0.4); }
   .question-success {
-    margin-top: 8px; padding: 8px 12px;
+    margin-top: 7px; padding: 6px 10px;
     background: rgba(7,193,96,0.12); border: 1px solid rgba(7,193,96,0.25);
-    border-radius: 8px; font-size: 12px; color: #07C160;
+    border-radius: 7px; font-size: 11px; color: #07C160;
     text-align: center;
-    animation: fadeInUp 0.3s ease-out;
   }
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(6px); }
@@ -731,18 +730,14 @@
       <div class="share-bar" id="shareBar">
         <button class="share-btn" onclick="showQR()">📤 分享给同学</button>
         <button class="share-btn copy" onclick="copyLink()">🔗 复制链接</button>
+        <button class="share-btn question" id="questionToggleBtn" onclick="toggleQuestion()">❓ 提交问题</button>
       </div>
-      <!-- 问题搜集 -->
-      <div class="question-box" id="questionBox">
-        <div class="question-box-header">
-          <span class="question-box-icon">❓</span>
-          <span>想问老师？直接告诉我</span>
+      <!-- 问题输入弹层 -->
+      <div class="question-popup" id="questionPopup">
+        <div class="question-popup-form">
+          <textarea class="question-input" id="questionInput" placeholder="输入你想问老师的问题…" rows="2"></textarea>
+          <button class="question-send-btn" onclick="submitQuestion()">✉️ 发送</button>
         </div>
-        <div class="question-box-form">
-          <textarea class="question-input" id="questionInput" placeholder="输入你想问的问题…" rows="2"></textarea>
-          <button class="question-submit" id="questionSubmit" onclick="submitQuestion()">✉️ 提交问题</button>
-        </div>
-        <div class="question-hint" id="questionHint">提交后老师会整理并更新知识库</div>
         <div class="question-success" id="questionSuccess" style="display:none">
           ✅ 提交成功！老师会尽快整理回复
         </div>
@@ -1086,6 +1081,24 @@ document.getElementById('shareModal').addEventListener('click', function(e) { if
 function getQuestions() { try { return JSON.parse(localStorage.getItem('teacherQuestions') || '[]'); } catch(e) { return []; } }
 function saveQuestions(data) { localStorage.setItem('teacherQuestions', JSON.stringify(data)); }
 
+function toggleQuestion() {
+  const popup = document.getElementById('questionPopup');
+  const btn = document.getElementById('questionToggleBtn');
+  const isOpen = popup.classList.contains('open');
+  if (isOpen) {
+    popup.classList.remove('open');
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  } else {
+    popup.classList.add('open');
+    btn.style.background = 'rgba(107,92,231,0.2)';
+    btn.style.borderColor = 'var(--primary)';
+    btn.style.color = 'var(--primary-light)';
+    setTimeout(() => document.getElementById('questionInput').focus(), 100);
+  }
+}
+
 function submitQuestion() {
   const input = document.getElementById('questionInput');
   const text = input.value.trim();
@@ -1095,7 +1108,6 @@ function submitQuestion() {
     return;
   }
   const questions = getQuestions();
-  // 避免重复提交
   if (questions.some(q => q.text === text)) {
     showToast('这个问题已经提交过了哦');
     return;
@@ -1106,11 +1118,8 @@ function submitQuestion() {
   });
   saveQuestions(questions);
   input.value = '';
-  // 显示成功提示
   const success = document.getElementById('questionSuccess');
   success.style.display = 'block';
-  success.style.animation = 'none';
-  setTimeout(() => { success.style.animation = 'fadeInUp 0.3s ease-out'; }, 10);
   setTimeout(() => { success.style.display = 'none'; }, 3500);
   showToast('问题已提交！老师会尽快整理 💡');
 }
